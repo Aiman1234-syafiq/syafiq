@@ -111,7 +111,7 @@ h1,h2,.btn,label{font-family:var(--fh)}
 .hint{color:var(--gold);letter-spacing:3px;font-size:.85rem;animation:blink 1.6s infinite}
 @keyframes blink{50%{opacity:.3}}
 
-/* === CARD — full height dalam phone === */
+/* === CARD === */
 .card{
   display:none;
   position:relative;
@@ -221,9 +221,38 @@ textarea:focus{outline:2px solid var(--gold)}
 .ember{position:fixed;bottom:-10px;width:3px;height:3px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);pointer-events:none;z-index:1;animation:rise linear infinite;will-change:transform,opacity}
 @keyframes rise{to{transform:translate(30px,-105vh);opacity:0}}
 
-/* birthday screens */
-.bd{position:fixed;inset:0;z-index:35;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;padding-top:calc(24px + env(safe-area-inset-top,0px));padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));text-align:center;overflow-y:auto;background:radial-gradient(ellipse at 50% 25%,rgba(211,47,47,.55),transparent 60%),radial-gradient(ellipse at 50% 100%,rgba(79,195,247,.25),transparent 55%),var(--bg)}
+/* ============================================================
+   BIRTHDAY SCREENS — FIXED
+   ============================================================ */
+.bd{
+  position:fixed;
+  inset:0;
+  z-index:35;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:12px;
+  padding:24px;
+  padding-top:calc(24px + env(safe-area-inset-top,0px));
+  padding-bottom:calc(24px + env(safe-area-inset-bottom,0px));
+  text-align:center;
+  overflow-y:auto;
+  -webkit-overflow-scrolling:touch;
+  background:
+    radial-gradient(ellipse at 50% 25%,rgba(211,47,47,.55),transparent 60%),
+    radial-gradient(ellipse at 50% 100%,rgba(79,195,247,.25),transparent 55%),
+    var(--bg);
+}
 .bd.show{display:flex;animation:fade .6s}
+
+/* Letter screen — start dari atas, scroll, no gap */
+#bd2{
+  justify-content:flex-start;
+  padding-top:calc(48px + env(safe-area-inset-top,0px));
+  padding-bottom:calc(48px + env(safe-area-inset-bottom,0px));
+}
+
 .bd h2{font:900 1.4rem var(--fh);letter-spacing:4px;color:#fff;text-shadow:0 0 14px var(--red)}
 .age{font:900 7.5rem/1 var(--fh);color:var(--gold);text-shadow:0 0 30px rgba(255,193,7,.7),4px 4px 0 var(--red);animation:g2 2s ease-in-out infinite}
 @keyframes g2{50%{text-shadow:0 0 70px #ffc107,4px 4px 0 var(--red)}}
@@ -236,14 +265,25 @@ textarea:focus{outline:2px solid var(--gold)}
 .fl:nth-child(odd){animation-delay:.3s}
 @keyframes flick{to{transform:scale(1.15) rotate(6deg)}}
 .fl.off{opacity:.15;filter:none;transform:scale(.6);animation:none}
-.letter{max-width:430px;text-align:left;padding:22px 20px;border:1px solid var(--gold);background:rgba(13,17,23,.88);line-height:1.7;font-size:1.08rem}
+
+.letter{
+  max-width:430px;
+  width:100%;
+  text-align:left;
+  padding:22px 20px;
+  border:1px solid var(--gold);
+  background:rgba(13,17,23,.88);
+  line-height:1.7;
+  font-size:1.08rem;
+  margin-bottom:8px;
+}
 .letter p{opacity:0;transform:translateY(10px);margin-bottom:11px;animation:lineIn .7s forwards}
 .letter .sig{color:var(--gold);font-style:italic;margin:0}
 @keyframes lineIn{to{opacity:1;transform:none}}
 .confetti{position:absolute;top:-40px;pointer-events:none;animation:cf linear infinite;will-change:transform}
 @keyframes cf{to{transform:translateY(115vh) rotate(720deg)}}
 
-/* === MOBILE — full screen, no clip-path === */
+/* === MOBILE === */
 @media(max-width:600px){
   body{
     padding:0;
@@ -263,7 +303,7 @@ textarea:focus{outline:2px solid var(--gold)}
   .sound-toggle{top:4px}
 }
 
-/* === TABLET — ada sikit border === */
+/* === TABLET === */
 @media(min-width:601px) and (max-width:900px){
   body{padding:12px}
   .card{max-height:calc(100dvh - 24px);min-height:auto}
