@@ -1,1712 +1,850 @@
 <!DOCTYPE html>
-<html lang="ms">
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
-  <title>🌸 Jemputan Istimewa Untuk Nur 💕</title>
-  
-  <!-- ====== GOOGLE SHEETS CONFIG ====== -->
-  <!-- GANTI URL INI DENGAN WEB APP URL DARI GOOGLE APPS SCRIPT -->
-  <script>
-    const GOOGLE_SHEETS_API = 'https://script.google.com/macros/s/AKfycbz0GcZ8GOirbc4A5RtRKYMXDQI-R29IlgzE0nsCZB3RX5mxWuZmNZ4zs6oDWuByJlfN/exec';
-    const GOOGLE_MAPS_LINK = 'https://share.google/dNbxll9e8QVUNBN3t';
-    const GOOGLE_CALENDAR_LINK = 'https://calendar.google.com/calendar/render?action=TEMPLATE&text=Bazar+Buku+Johor+2026&dates=20260821T020000Z/20260825T140000Z&details=Teman+istimewa+di+Paradigm+Mall+JB&location=Paradigm+Mall+Johor';
-  </script>
-  
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      font-family: 'Segoe UI', 'Poppins', 'Dancing Script', cursive, system-ui, -apple-system, sans-serif;
-      background: linear-gradient(135deg, #ffeef8 0%, #ffd6e8 30%, #ffc0d5 60%, #ffe0ec 100%);
-      min-height: 100vh;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      padding: 12px;
-      margin: 0;
-      position: relative;
-      overflow-x: hidden;
-    }
-
-    /* ========== FLOATING DECORATIONS ========== */
-    .floating-container {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 0;
-      overflow: hidden;
-    }
-
-    .float-item {
-      position: absolute;
-      animation: floatUp linear infinite;
-      opacity: 0.4;
-      font-size: 22px;
-    }
-
-    @keyframes floatUp {
-      0% {
-        transform: translateY(105vh) rotate(0deg) scale(0.4);
-        opacity: 0.25;
-      }
-      50% {
-        opacity: 0.55;
-      }
-      100% {
-        transform: translateY(-10vh) rotate(720deg) scale(1.3);
-        opacity: 0;
-      }
-    }
-
-    /* ========== ENVELOPE OVERLAY ========== */
-    .envelope-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(255, 235, 240, 0.97);
-      backdrop-filter: blur(20px);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      z-index: 1000;
-      flex-direction: column;
-      transition: all 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-
-    .envelope-overlay.hidden {
-      opacity: 0;
-      visibility: hidden;
-      pointer-events: none;
-      transform: scale(1.2);
-    }
-
-    .envelope-wrapper {
-      position: relative;
-      cursor: pointer;
-    }
-
-    .envelope {
-      background: linear-gradient(145deg, #fff5f8, #ffe0ec);
-      border-radius: 55px 55px 40px 40px;
-      padding: 50px 35px 35px;
-      box-shadow: 0 40px 80px rgba(255, 105, 135, 0.3), 0 0 0 4px rgba(255, 150, 170, 0.3);
-      text-align: center;
-      transition: all 0.4s ease;
-      border: 3px solid #ffb0c8;
-      position: relative;
-      max-width: 340px;
-      width: 88%;
-      margin: 0 auto;
-      animation: envelopeBounce 2s ease-in-out infinite;
-    }
-
-    @keyframes envelopeBounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-15px); }
-    }
-
-    .envelope:active {
-      transform: scale(0.93);
-      box-shadow: 0 20px 40px rgba(255, 105, 135, 0.4);
-    }
-
-    .envelope-flap {
-      position: absolute;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      font-size: 70px;
-      filter: drop-shadow(0 10px 15px rgba(255, 80, 120, 0.3));
-      animation: flapWiggle 2.5s ease-in-out infinite;
-    }
-
-    @keyframes flapWiggle {
-      0%, 100% { transform: translateX(-50%) rotate(0); }
-      25% { transform: translateX(-50%) rotate(-5deg); }
-      75% { transform: translateX(-50%) rotate(5deg); }
-    }
-
-    .envelope-seal {
-      font-size: 50px;
-      display: block;
-      margin: 15px 0 10px;
-      animation: pulse 1.8s ease-in-out infinite;
-    }
-
-    @keyframes pulse {
-      0%, 100% { transform: scale(1); }
-      50% { transform: scale(1.15); }
-    }
-
-    .envelope-text {
-      font-size: 1.8rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #ff4d6d, #e8375e);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      letter-spacing: 1.5px;
-      font-family: 'Dancing Script', cursive, 'Segoe UI', sans-serif;
-    }
-
-    .envelope-sub {
-      color: #d4687c;
-      font-size: 0.95rem;
-      margin-top: 5px;
-      font-weight: 500;
-    }
-
-    .click-hint {
-      margin-top: 25px;
-      color: #e891a5;
-      font-size: 0.9rem;
-      font-weight: 600;
-      animation: fadeHint 2s ease-in-out infinite;
-    }
-
-    @keyframes fadeHint {
-      0%, 100% { opacity: 0.5; }
-      50% { opacity: 1; }
-    }
-
-    .sparkles {
-      position: absolute;
-      pointer-events: none;
-      font-size: 25px;
-      animation: sparkleFloat 3s ease-in-out infinite;
-    }
-
-    @keyframes sparkleFloat {
-      0%, 100% { transform: translateY(0) scale(1); opacity: 0.7; }
-      50% { transform: translateY(-25px) scale(1.4); opacity: 0; }
-    }
-
-    /* ========== MAIN CARD ========== */
-    .card {
-      max-width: 530px;
-      width: 100%;
-      background: rgba(255, 250, 252, 0.92);
-      backdrop-filter: blur(28px);
-      border-radius: 50px;
-      padding: 38px 26px 32px;
-      box-shadow: 0 30px 70px rgba(255, 90, 130, 0.25), 0 0 0 4px rgba(255, 140, 165, 0.2);
-      position: relative;
-      z-index: 2;
-      border: 3px solid rgba(255, 140, 165, 0.35);
-      max-height: 93vh;
-      overflow-y: auto;
-      transition: all 0.3s;
-      animation: cardPopIn 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-
-    @keyframes cardPopIn {
-      0% { opacity: 0; transform: scale(0.7) rotate(-8deg); }
-      100% { opacity: 1; transform: scale(1) rotate(0deg); }
-    }
-
-    .card::-webkit-scrollbar { width: 5px; }
-    .card::-webkit-scrollbar-track { background: #ffe0ea; border-radius: 10px; }
-    .card::-webkit-scrollbar-thumb { background: #ff8da1; border-radius: 10px; }
-
-    .card::before {
-      content: '🌸';
-      position: absolute;
-      top: -20px;
-      left: -15px;
-      font-size: 50px;
-      transform: rotate(-18deg);
-      opacity: 0.7;
-      filter: drop-shadow(0 5px 8px rgba(255,100,130,0.3));
-      pointer-events: none;
-    }
-
-    .card::after {
-      content: '🦋';
-      position: absolute;
-      bottom: -20px;
-      right: -15px;
-      font-size: 48px;
-      transform: rotate(15deg);
-      opacity: 0.7;
-      filter: drop-shadow(0 5px 8px rgba(255,100,150,0.3));
-      pointer-events: none;
-    }
-
-    .sticker-badge {
-      position: absolute;
-      top: -18px;
-      right: -12px;
-      background: linear-gradient(135deg, #ff5e7e, #ff2d5c);
-      color: white;
-      padding: 10px 25px;
-      border-radius: 50px;
-      font-size: 14px;
-      font-weight: 800;
-      transform: rotate(10deg);
-      box-shadow: 0 10px 25px rgba(255, 50, 90, 0.4);
-      border: 3px solid white;
-      letter-spacing: 1px;
-      z-index: 5;
-      animation: stickerWiggle 3s ease-in-out infinite;
-    }
-
-    @keyframes stickerWiggle {
-      0%, 100% { transform: rotate(10deg); }
-      50% { transform: rotate(13deg); }
-    }
-
-    .music-btn {
-      position: absolute;
-      top: 20px;
-      left: 22px;
-      background: rgba(255, 240, 245, 0.85);
-      border-radius: 50px;
-      padding: 8px 16px;
-      font-size: 13px;
-      border: 2px solid #ffb8c8;
-      cursor: pointer;
-      z-index: 10;
-      color: #d44a6a;
-      font-weight: 700;
-      backdrop-filter: blur(8px);
-      transition: all 0.3s;
-    }
-
-    .music-btn:hover {
-      background: #fff0f5;
-      border-color: #ff7b9c;
-    }
-
-    .music-btn.playing {
-      background: #fff0f5;
-      border-color: #ff7b9c;
-      animation: musicPulse 1.5s ease-in-out infinite;
-    }
-
-    @keyframes musicPulse {
-      0%, 100% { box-shadow: 0 0 0 0 rgba(255, 100, 130, 0.4); }
-      50% { box-shadow: 0 0 0 10px rgba(255, 100, 130, 0); }
-    }
-
-    /* ========== HEADER ========== */
-    .header {
-      text-align: center;
-      margin: 18px 0 12px;
-    }
-
-    .header .main-emoji {
-      font-size: 58px;
-      display: block;
-      animation: bounceEmoji 2.2s ease-in-out infinite;
-      margin-bottom: 8px;
-    }
-
-    @keyframes bounceEmoji {
-      0%, 100% { transform: translateY(0) scale(1); }
-      30% { transform: translateY(-18px) scale(1.08); }
-      60% { transform: translateY(-6px) scale(1.02); }
-    }
-
-    .header h1 {
-      font-size: 2rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #ff4d6d, #d9304e);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      line-height: 1.3;
-      letter-spacing: -0.5px;
-    }
-
-    .subtitle {
-      font-size: 0.9rem;
-      color: #c48090;
-      font-weight: 500;
-      margin-top: 2px;
-    }
-
-    /* ========== COUNTDOWN ========== */
-    .countdown-box {
-      background: linear-gradient(135deg, #fff0f5, #ffe4ec);
-      border-radius: 40px;
-      padding: 14px 20px;
-      margin: 16px 0 10px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 10px;
-      font-weight: 700;
-      color: #c0395b;
-      font-size: 1rem;
-      border: 2px dashed #ffb0c8;
-      box-shadow: 0 6px 20px rgba(255, 120, 150, 0.15);
-      transition: all 0.3s;
-    }
-
-    .countdown-box:hover {
-      border-color: #ff7b9c;
-      transform: scale(1.02);
-    }
-
-    .countdown-box .clock-icon {
-      font-size: 24px;
-      animation: pulse 2s infinite;
-    }
-
-    /* ========== STEP INDICATOR ========== */
-    .steps-indicator {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      gap: 14px;
-      margin: 20px 0 14px;
-    }
-
-    .step-dot {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      background: #f0c8d5;
-      transition: all 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-    }
-
-    .step-dot.active {
-      background: #ff3b6e;
-      transform: scale(1.6);
-      box-shadow: 0 0 20px rgba(255, 59, 110, 0.6);
-    }
-
-    .step-dot.done {
-      background: #ff8598;
-      box-shadow: 0 0 12px rgba(255, 100, 130, 0.4);
-    }
-
-    .step-line {
-      width: 25px;
-      height: 2px;
-      background: #f0c8d5;
-      border-radius: 5px;
-      transition: all 0.4s;
-    }
-
-    /* ========== STEPS ========== */
-    .step {
-      display: none;
-      animation: fadeSlideIn 0.5s ease-out;
-    }
-
-    .step.active {
-      display: block;
-    }
-
-    @keyframes fadeSlideIn {
-      0% { opacity: 0; transform: translateY(20px); }
-      100% { opacity: 1; transform: translateY(0); }
-    }
-
-    /* ========== PERSONAL NOTE ========== */
-    .love-note {
-      text-align: center;
-      padding: 22px 14px;
-      background: linear-gradient(135deg, #fff5f8, #ffe8f0);
-      border-radius: 28px;
-      margin-bottom: 18px;
-      border: 2px solid #ffc8d8;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .love-note::before {
-      content: '💗';
-      position: absolute;
-      top: -10px;
-      left: 15px;
-      font-size: 28px;
-      opacity: 0.5;
-      animation: floatSlow 3s ease-in-out infinite;
-    }
-
-    .love-note::after {
-      content: '💗';
-      position: absolute;
-      bottom: -10px;
-      right: 15px;
-      font-size: 28px;
-      opacity: 0.5;
-      animation: floatSlow 3s ease-in-out infinite reverse;
-    }
-
-    @keyframes floatSlow {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .love-note .greeting {
-      font-size: 1.15rem;
-      font-weight: 700;
-      color: #4a1e2e;
-      line-height: 1.7;
-    }
-
-    .love-note .highlight-name {
-      color: #ff2d5c;
-      font-size: 1.3rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #ff4d6d, #ff1a4a);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .heart-beat {
-      display: inline-block;
-      animation: heartBeat 1s ease-in-out infinite;
-      color: #ff4d6d;
-      font-size: 1.3rem;
-    }
-
-    @keyframes heartBeat {
-      0%, 100% { transform: scale(1); }
-      25% { transform: scale(1.3); }
-      50% { transform: scale(1.15); }
-      75% { transform: scale(1.25); }
-    }
-
-    /* ========== EVENT POSTER ========== */
-    .event-poster {
-      background: #fff9fb;
-      border-radius: 26px;
-      padding: 18px 14px;
-      margin: 14px 0;
-      border: 2px dashed #ffb8cc;
-      box-shadow: 0 8px 25px rgba(255, 120, 150, 0.1);
-      transition: all 0.3s;
-    }
-
-    .event-poster:hover {
-      border-color: #ff7b9c;
-      box-shadow: 0 12px 35px rgba(255, 120, 150, 0.18);
-    }
-
-    .event-poster .event-title {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: #3d1a26;
-      text-align: center;
-      margin-bottom: 10px;
-    }
-
-    .event-poster .highlight {
-      color: #ff3b6e;
-      background: rgba(255, 59, 110, 0.1);
-      padding: 2px 10px;
-      border-radius: 20px;
-    }
-
-    .event-details-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr 1fr;
-      gap: 8px;
-      margin: 10px 0;
-    }
-
-    .detail-card {
-      text-align: center;
-      background: white;
-      padding: 12px 6px;
-      border-radius: 16px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.04);
-      border: 1px solid #ffe0ea;
-      transition: all 0.3s;
-    }
-
-    .detail-card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(255, 120, 150, 0.12);
-    }
-
-    .detail-card .icon {
-      font-size: 22px;
-      display: block;
-    }
-
-    .detail-card .value {
-      font-weight: 700;
-      color: #3d1a26;
-      font-size: 0.85rem;
-      margin-top: 3px;
-    }
-
-    .map-link {
-      display: inline-block;
-      margin-top: 8px;
-      color: #d44a6a;
-      font-weight: 700;
-      text-decoration: none;
-      background: #fff0f5;
-      padding: 10px 22px;
-      border-radius: 25px;
-      font-size: 0.9rem;
-      border: 2px solid #ffc8d8;
-      transition: all 0.3s;
-      cursor: pointer;
-    }
-
-    .map-link:hover {
-      background: #ffe0ea;
-      transform: translateY(-2px);
-      border-color: #ff7b9c;
-      box-shadow: 0 8px 20px rgba(255, 100, 130, 0.2);
-    }
-
-    /* ========== OPTION CARDS ========== */
-    .option-grid, .time-grid {
-      display: grid;
-      gap: 10px;
-      margin: 12px 0 16px;
-    }
-
-    .option-grid {
-      grid-template-columns: 1fr 1fr 1fr;
-    }
-
-    .time-grid {
-      grid-template-columns: 1fr 1fr;
-    }
-
-    .selectable-card {
-      padding: 14px 6px;
-      border: 2px solid #f0c8d5;
-      border-radius: 18px;
-      text-align: center;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      background: #fefafa;
-      font-weight: 600;
-      color: #4a1e2e;
-      font-size: 0.9rem;
-    }
-
-    .selectable-card:hover {
-      border-color: #ff9db5;
-      transform: translateY(-3px);
-      box-shadow: 0 8px 20px rgba(255, 120, 150, 0.2);
-    }
-
-    .selectable-card.selected {
-      border-color: #ff3b6e;
-      background: linear-gradient(135deg, #fff0f5, #ffe4ee);
-      box-shadow: 0 8px 25px rgba(255, 59, 110, 0.3);
-      transform: translateY(-3px);
-      color: #ff2d5c;
-      font-weight: 700;
-    }
-
-    /* ========== DINNER TOGGLE ========== */
-    .dinner-toggle {
-      display: flex;
-      gap: 12px;
-      margin: 14px 0;
-    }
-
-    .toggle-btn {
-      flex: 1;
-      padding: 16px;
-      border-radius: 22px;
-      border: 2px solid #f0c8d5;
-      text-align: center;
-      cursor: pointer;
-      background: #fefafa;
-      font-weight: 700;
-      transition: all 0.3s;
-      font-size: 1rem;
-    }
-
-    .toggle-btn:hover {
-      border-color: #ff9db5;
-      transform: translateY(-2px);
-    }
-
-    .toggle-btn.selected-yes {
-      border-color: #ff6b8a;
-      background: linear-gradient(135deg, #fff0f5, #ffe0ea);
-      color: #ff3b6e;
-      box-shadow: 0 6px 18px rgba(255, 80, 120, 0.25);
-    }
-
-    .toggle-btn.selected-no {
-      border-color: #d0b0b8;
-      background: #f8f0f2;
-      color: #9e7a84;
-    }
-
-    /* ========== FORM ELEMENTS ========== */
-    select, textarea {
-      font-family: inherit;
-      background: #fefafa;
-      border: 2px solid #f0c8d5;
-      border-radius: 20px;
-      padding: 14px;
-      width: 100%;
-      transition: all 0.3s;
-      font-size: 0.95rem;
-    }
-
-    select:focus, textarea:focus {
-      outline: none;
-      border-color: #ff7b9c;
-      box-shadow: 0 0 0 4px rgba(255, 120, 150, 0.1);
-    }
-
-    /* ========== BUTTONS ========== */
-    .btn {
-      padding: 16px 22px;
-      border: none;
-      border-radius: 35px;
-      font-size: 1.05rem;
-      font-weight: 700;
-      cursor: pointer;
-      transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      width: 100%;
-      background: #f0d8e0;
-      color: #4a1e2e;
-      letter-spacing: 0.5px;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn:active { transform: scale(0.93); }
-    .btn:disabled { opacity: 0.5; transform: none !important; cursor: not-allowed; }
-
-    .btn-primary {
-      background: linear-gradient(145deg, #ff5e7e, #ff2d5c);
-      color: white;
-      box-shadow: 0 12px 30px rgba(255, 45, 92, 0.4);
-    }
-
-    .btn-primary:hover:not(:disabled) {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 40px rgba(255, 45, 92, 0.5);
-    }
-
-    .btn-success {
-      background: linear-gradient(145deg, #ff8598, #ff5e7e);
-      color: white;
-      box-shadow: 0 12px 30px rgba(255, 90, 120, 0.4);
-    }
-
-    .btn-success:hover:not(:disabled) {
-      transform: translateY(-4px);
-      box-shadow: 0 16px 40px rgba(255, 90, 120, 0.5);
-    }
-
-    .btn-outline {
-      background: transparent;
-      border: 2px solid #ffb8cc;
-      color: #d44a6a;
-    }
-
-    .btn-outline:hover {
-      background: #fff5f8;
-      border-color: #ff7b9c;
-    }
-
-    .btn-group {
-      display: flex;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .btn-group .btn {
-      flex: 1;
-    }
-
-    .btn::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 0;
-      height: 0;
-      border-radius: 50%;
-      background: rgba(255, 255, 255, 0.3);
-      transform: translate(-50%, -50%);
-      transition: width 0.6s, height 0.6s;
-    }
-
-    .btn:active::after {
-      width: 300px;
-      height: 300px;
-    }
-
-    /* ========== POPUP OVERLAY ========== */
-    .popup-overlay {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0,0,0,0.55);
-      z-index: 3000;
-      align-items: center;
-      justify-content: center;
-      backdrop-filter: blur(8px);
-    }
-
-    .popup-overlay.show {
-      display: flex;
-    }
-
-    .popup-box {
-      background: white;
-      border-radius: 50px;
-      padding: 50px 35px 38px;
-      max-width: 400px;
-      width: 90%;
-      text-align: center;
-      animation: popBounce 0.7s cubic-bezier(0.68, -0.55, 0.265, 1.55);
-      box-shadow: 0 40px 90px rgba(0,0,0,0.3);
-      position: relative;
-      overflow: hidden;
-      border: 4px solid #ffb8cc;
-    }
-
-    @keyframes popBounce {
-      0% { opacity: 0; transform: scale(0.6) rotate(-10deg); }
-      60% { transform: scale(1.05) rotate(2deg); }
-      100% { opacity: 1; transform: scale(1) rotate(0deg); }
-    }
-
-    .confetti-rain {
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      overflow: hidden;
-    }
-
-    .confetti-piece {
-      position: absolute;
-      font-size: 28px;
-      animation: confettiFall 3s ease-in forwards;
-      opacity: 0;
-    }
-
-    @keyframes confettiFall {
-      0% { transform: translateY(-40px) rotate(0deg) scale(1); opacity: 1; }
-      100% { transform: translateY(400px) rotate(720deg) scale(0.3); opacity: 0; }
-    }
-
-    .popup-emoji {
-      font-size: 80px;
-      display: block;
-      margin-bottom: 15px;
-      animation: bounceEmoji 1.5s ease-in-out infinite;
-    }
-
-    .popup-title {
-      font-size: 2rem;
-      font-weight: 800;
-      background: linear-gradient(135deg, #ff4d6d, #e8375e);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      background-clip: text;
-      margin-bottom: 10px;
-    }
-
-    .popup-message {
-      color: #5a3a44;
-      font-size: 1.1rem;
-      line-height: 1.6;
-      margin-bottom: 20px;
-    }
-
-    .popup-btn {
-      background: linear-gradient(145deg, #ff5e7e, #ff2d5c);
-      color: white;
-      border: none;
-      padding: 15px 40px;
-      border-radius: 50px;
-      font-weight: 700;
-      font-size: 1.1rem;
-      cursor: pointer;
-      box-shadow: 0 10px 30px rgba(255, 45, 92, 0.4);
-      transition: all 0.3s;
-    }
-
-    .popup-btn:hover {
-      transform: scale(1.05);
-      box-shadow: 0 14px 38px rgba(255, 45, 92, 0.5);
-    }
-
-    .popup-btn:active {
-      transform: scale(0.95);
-    }
-
-    /* ========== SUCCESS SECTION ========== */
-    .success-section {
-      text-align: center;
-      padding: 25px 10px;
-      animation: fadeSlideIn 0.6s ease-out;
-    }
-
-    .success-icon {
-      font-size: 80px;
-      animation: bounceEmoji 2s infinite;
-    }
-
-    .success-title {
-      font-size: 2rem;
-      font-weight: 800;
-      color: #ff3b6e;
-      margin: 10px 0;
-    }
-
-    .summary-box {
-      background: #fff5f8;
-      border-radius: 24px;
-      padding: 20px;
-      margin: 18px 0;
-      line-height: 2.2;
-      border: 2px solid #ffd0de;
-      text-align: left;
-      font-size: 1rem;
-      animation: fadeSlideIn 0.6s ease-out 0.2s both;
-    }
-
-    .summary-box strong {
-      color: #d9304e;
-    }
-
-    .action-buttons {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 15px;
-    }
-
-    .action-buttons .btn {
-      text-decoration: none;
-      display: inline-block;
-      text-align: center;
-    }
-
-    /* ========== QR CODE ========== */
-    .qr-container {
-      text-align: center;
-      margin: 20px 0;
-    }
-
-    .qr-container img {
-      width: 150px;
-      height: 150px;
-      border-radius: 15px;
-      border: 3px solid #ffb8cc;
-      padding: 8px;
-      background: white;
-    }
-
-    .qr-container p {
-      color: #c48090;
-      font-size: 0.8rem;
-      margin-top: 5px;
-    }
-
-    /* ========== FOOTER ========== */
-    .footer-note {
-      text-align: center;
-      margin-top: 20px;
-      font-size: 0.8rem;
-      color: #d0a0b0;
-    }
-
-    .footer-note .heart {
-      color: #ff4d6d;
-      animation: heartBeat 1.5s ease-in-out infinite;
-      display: inline-block;
-    }
-
-    /* ========== RESPONSIVE ========== */
-    @media (max-width: 450px) {
-      .card {
-        padding: 25px 15px 22px;
-        border-radius: 40px;
-      }
-
-      .header h1 {
-        font-size: 1.6rem;
-      }
-
-      .option-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .time-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .selectable-card {
-        padding: 12px 4px;
-        font-size: 0.8rem;
-      }
-
-      .popup-box {
-        padding: 35px 20px 28px;
-      }
-
-      .popup-emoji {
-        font-size: 60px;
-      }
-    }
-
-    @media (max-width: 360px) {
-      .option-grid {
-        grid-template-columns: 1fr 1fr;
-      }
-      .time-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#7f0000">
+<title>Avengers Mission Invitation — Nurul Iylia</title>
+
+<!-- OG / Social preview -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="Avengers Mission Invitation — Nurul Iylia">
+<meta property="og:description" content="Sunset • Dinner • Movie. You pick the day. Syafiq is waiting.">
+<meta property="og:image" content="https://api.qrserver.com/v1/create-qr-code/?size=400x400&data=Avengers%20Mission">
+<meta name="twitter:card" content="summary_large_image">
+
+<!-- Favicon (inline SVG) -->
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 120'%3E%3Cpath d='M50 3C24 3 8 22 8 52v28c0 19 15 35 42 41 27-6 42-22 42-41V52C92 22 76 3 50 3z' fill='%23d32f2f'/%3E%3Cpath d='M22 54l24 5v10l-26-4zM78 54l-24 5v10l26-4z' fill='%234fc3f7'/%3E%3C/svg%3E">
+
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+
+<script>
+/* ============================================================
+   CONFIG — edit sini sahaja
+   ============================================================ */
+const CONFIG = {
+  API_URL: 'https://script.google.com/macros/s/AKfycbw22l8hiUGJxdQ6gV3Tlg-6cZqN_itzN5FRg82bH4EuNV8zj5bxxQ37Sx6T_vd5oNe9/exec',
+  MAPS_SUNSET: 'https://maps.app.goo.gl/YiCeJ8dKxZCgYwTw5',
+  MAPS_MOVIE: 'https://share.google/8T8I275x7qTgyCBGf',
+
+  /* === TARIKH === */
+  BIRTHDAY: '2026-10-02T00:00:00+08:00',  // Birthday Iylia
+  AGE: 27,                                 // Umur baru
+  EVENT_DATE: '2026-10-03T19:00:00+08:00', // Event (sehari lepas birthday)
+  EVENT_DURATION_HOURS: 6,                 // Tempoh event untuk calendar
+
+  STORAGE_KEY: 'nurul_iylia_stark_v1',
+  SOUND_KEY: 'nurul_iylia_sound_v1',
+
+  ASSISTANT: 'Syafiq'  // Nama assistant
+};
+
+/* Auto-generate calendar URL dari EVENT_DATE */
+(function buildCalendar() {
+  const start = new Date(CONFIG.EVENT_DATE);
+  const end = new Date(start.getTime() + CONFIG.EVENT_DURATION_HOURS * 3600 * 1000);
+  const fmt = d => d.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  CONFIG.CALENDAR_URL = 'https://calendar.google.com/calendar/render?action=TEMPLATE'
+    + '&text=' + encodeURIComponent('Sunset + Dinner + Movie')
+    + '&dates=' + fmt(start) + '/' + fmt(end)
+    + '&details=' + encodeURIComponent('Sunset at Tambak Pontian + Dinner + Movie at Paradigm Mall JB')
+    + '&location=' + encodeURIComponent('Tambak Pontian, Johor');
+})();
+</script>
+
+<style>
+:root{--red:#d32f2f;--dred:#7f0000;--gold:#ffc107;--arc:#4fc3f7;--bg:#07090d;--ink:#e8eef5;--fh:'Orbitron','Impact',sans-serif;--fb:'Rajdhani','Segoe UI',system-ui,sans-serif}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{font-family:var(--fb);font-weight:600;color:var(--ink);background:var(--bg);
+background-image:radial-gradient(ellipse at 50% -10%,rgba(211,47,47,.45),transparent 55%),radial-gradient(ellipse at 50% 110%,rgba(79,195,247,.25),transparent 55%);background-attachment:fixed;
+display:flex;align-items:center;justify-content:center;padding:12px;padding-top:calc(12px + env(safe-area-inset-top,0px));padding-bottom:calc(12px + env(safe-area-inset-bottom,0px));overflow-x:hidden}
+body::before{content:'';position:fixed;inset:0;pointer-events:none;background:repeating-linear-gradient(0deg,rgba(79,195,247,.05) 0 1px,transparent 1px 3px),linear-gradient(rgba(255,193,7,.05) 1px,transparent 1px) 0 0/44px 44px,linear-gradient(90deg,rgba(255,193,7,.05) 1px,transparent 1px) 0 0/44px 44px}
+h1,h2,.btn,label{font-family:var(--fh)}
+.overlay{position:fixed;inset:0;z-index:50;background:var(--bg);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .6s,visibility .6s}
+.overlay.hidden{opacity:0;visibility:hidden;pointer-events:none}
+.reactor{width:110px;height:110px;border-radius:50%;border:5px solid var(--gold);position:relative;background:radial-gradient(circle,#fff 0,#bdefff 30%,var(--arc) 62%,#01579b);animation:glow 1.6s ease-in-out infinite;will-change:box-shadow}
+.reactor::before{content:'';position:absolute;inset:-16px;border-radius:50%;border:2px dashed var(--gold);animation:spin 6s linear infinite}
+.reactor::after{content:'';position:absolute;inset:16px;border-radius:50%;border:3px solid rgba(255,255,255,.9);border-top-color:transparent;animation:spin 1.4s linear infinite}
+@keyframes glow{50%{box-shadow:0 0 90px var(--arc)}0%,100%{box-shadow:0 0 40px var(--arc)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+.boot-t{font:800 .95rem var(--fh);color:var(--gold);letter-spacing:5px}
+.boot-bar{width:220px;height:5px;background:#1b222c;border-radius:9px;overflow:hidden}
+.boot-bar i{display:block;height:100%;width:0;background:linear-gradient(90deg,var(--red),var(--gold));animation:load 1.7s ease-out forwards}
+@keyframes load{to{width:100%}}
+.boot-s{color:var(--arc);font-size:.8rem;letter-spacing:3px}
+.boot-skip{position:absolute;bottom:32px;color:#556;font-size:.7rem;letter-spacing:3px;cursor:pointer}
+#env{z-index:40;background:rgba(7,9,13,.97);cursor:pointer;text-align:center;padding:20px}
+.helmet{width:130px;filter:drop-shadow(0 0 25px rgba(255,193,7,.6));animation:float 3s ease-in-out infinite}
+.helmet .eye{fill:#e0f7ff;animation:eye 2.4s ease-in-out infinite}
+@keyframes eye{50%{fill:var(--arc)}}
+@keyframes float{50%{transform:translateY(-10px)}}
+.env-t{font:900 1.9rem/1.15 var(--fh);color:var(--gold);letter-spacing:3px;text-shadow:0 0 22px rgba(255,193,7,.5),3px 3px 0 var(--red)}
+.env-s{color:var(--arc);letter-spacing:4px;font-size:.85rem}
+.hint{color:var(--gold);letter-spacing:3px;font-size:.85rem;animation:blink 1.6s infinite}
+@keyframes blink{50%{opacity:.3}}
+
+.card{display:none;position:relative;width:100%;max-width:540px;max-height:94dvh;overflow-y:auto;padding:38px 22px 26px;background:linear-gradient(165deg,#12161d,#090b10);border:2px solid var(--gold);
+clip-path:polygon(0 18px,18px 0,calc(100% - 18px) 0,100% 18px,100% calc(100% - 18px),calc(100% - 18px) 100%,18px 100%,0 calc(100% - 18px));animation:pop .7s cubic-bezier(.2,.9,.3,1.2)}
+.card.show{display:block}
+@keyframes pop{from{opacity:0;transform:scale(.88) translateY(20px)}}
+.card::-webkit-scrollbar{width:5px}.card::-webkit-scrollbar-thumb{background:var(--red)}
+.corner{position:absolute;top:8px;font:.6rem var(--fh);letter-spacing:2px;color:var(--arc)}
+.corner.l{left:24px}.corner.r{right:24px;color:var(--gold)}
+.sound-toggle{position:absolute;top:6px;left:50%;transform:translateX(-50%);background:none;border:0;color:var(--arc);font-size:1rem;cursor:pointer;padding:2px 8px;z-index:5}
+.sound-toggle:hover{color:var(--gold)}
+.hero{text-align:center;margin-top:8px}
+.hero .helmet{width:100px}
+.hero h1{font-size:1.45rem;font-weight:900;line-height:1.2;color:var(--gold);letter-spacing:2px;margin-top:10px;text-shadow:0 0 20px rgba(255,193,7,.45),2px 2px 0 var(--red)}
+.hero h1 b{display:block;color:#fff;font-size:.95rem;letter-spacing:6px;margin-top:6px}
+.sub{color:var(--arc);letter-spacing:4px;font-size:.8rem;margin-top:6px}
+.cd{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:18px 0 6px}
+.cd div{text-align:center;padding:10px 0;border:1px solid var(--red);background:rgba(211,47,47,.1)}
+.cd b{display:block;font:700 1.35rem var(--fh);color:var(--gold)}
+.cd span{font-size:.65rem;letter-spacing:2px;color:var(--arc)}
+.cd.done{display:block;text-align:center;padding:14px;border:1px solid var(--gold);font-family:var(--fh);color:var(--gold);letter-spacing:3px}
+.roster{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:14px 0}
+.tile{text-align:center;padding:10px 2px 6px;border:1px solid #2f3846;background:linear-gradient(180deg,#141c28,#0a0d12);animation:asm .5s both;will-change:transform,opacity}
+.tile i{display:block;font-style:normal;font-size:1.8rem}
+.tile span{display:block;font:800 .55rem var(--fh);letter-spacing:1px;color:var(--gold);margin-top:4px}
+@keyframes asm{from{opacity:0;transform:translateY(-30px) scale(1.5)}}
+.dots{display:flex;justify-content:center;align-items:center;gap:10px;margin:16px 0}
+.dot{width:12px;height:12px;transform:rotate(45deg);border:2px solid #445;transition:.3s}
+.dot.active{background:var(--gold);border-color:var(--gold);box-shadow:0 0 14px var(--gold);transform:rotate(45deg) scale(1.3)}
+.dot.done{background:var(--red);border-color:var(--red)}
+.dl{width:26px;height:2px;background:#334}
+.step-indicator{text-align:center;color:var(--arc);font:800 .6rem var(--fh);letter-spacing:3px;margin-top:-8px;margin-bottom:8px}
+.step{display:none;animation:fade .4s}.step.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(10px)}}
+.brief{position:relative;padding:22px 16px 16px;border:1px solid rgba(79,195,247,.4);background:rgba(79,195,247,.05);margin-bottom:16px;line-height:1.7;font-size:1.05rem}
+.brief::before{content:'● SYAFIQ ONLINE';position:absolute;top:-10px;left:14px;background:#0b0e13;padding:0 8px;color:var(--arc);font:800 .62rem var(--fh);letter-spacing:2px}
+.q{display:block;min-height:3.2em;padding:8px 12px;margin-bottom:10px;border-left:3px solid var(--arc);background:rgba(79,195,247,.08);color:#bdefff;font-style:italic;font-size:.92rem}
+.q::after{content:'▌';animation:blink 1s step-end infinite}
+.brief em{font-style:normal;color:var(--gold)}.brief u{text-decoration:none;color:#ff6b6b}
+.plan{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:14px 0}
+.plan div{text-align:center;padding:12px 6px;border:1px solid #2a3340;background:#0d1117}
+.plan .i{font-size:1.5rem;display:block}
+.plan small{display:block;color:var(--arc);font:800 .58rem var(--fh);letter-spacing:2px;margin-top:4px}
+.plan span{font-size:.92rem}
+.loc{display:block;text-align:center;margin-bottom:14px;padding:12px;background:var(--gold);color:#000;text-decoration:none;font:900 .8rem var(--fh);letter-spacing:2px}
+label{display:block;margin:16px 0 8px;color:var(--gold);font-size:.8rem;font-weight:800;letter-spacing:2px}
+.grid{display:grid;gap:8px;grid-template-columns:1fr 1fr}.grid.three{grid-template-columns:1fr 1fr 1fr}
+.opt{position:relative;text-align:center;padding:14px 6px;cursor:pointer;user-select:none;border:1px solid #2f3846;background:#0d1117;font-size:.9rem;transition:.2s}
+.opt i{display:block;font-style:normal;font-size:1.6rem;margin-bottom:3px}
+.opt:hover{border-color:var(--gold);transform:translateY(-2px)}
+.opt.sel{border-color:var(--gold);background:linear-gradient(135deg,var(--dred),var(--red));color:var(--gold);box-shadow:0 0 22px rgba(211,47,47,.55)}
+.opt.sel::after{content:'✓';position:absolute;top:5px;right:6px;width:18px;height:18px;border-radius:50%;background:var(--gold);color:#000;font-size:.7rem;display:grid;place-items:center}
+textarea{width:100%;min-height:76px;padding:12px;background:#0d1117;border:1px solid #2f3846;color:var(--ink);font:600 .95rem var(--fb);resize:vertical}
+textarea:focus{outline:2px solid var(--gold)}
+.char-count{text-align:right;font-size:.7rem;color:#667;letter-spacing:2px;margin-top:4px}
+.char-count.warn{color:var(--gold)}
+.btn{width:100%;padding:15px;border:0;cursor:pointer;font-weight:900;font-size:.85rem;letter-spacing:2px;text-align:center;text-decoration:none;display:block;color:var(--ink);background:#252d3a;position:relative;overflow:hidden;
+clip-path:polygon(10px 0,100% 0,calc(100% - 10px) 100%,0 100%);transition:.2s}
+.btn:hover:not(:disabled){filter:brightness(1.2);transform:translateY(-2px)}
+.btn:disabled{opacity:.35;cursor:not-allowed}
+.btn.p{background:linear-gradient(135deg,var(--red),var(--dred));color:var(--gold)}
+.btn.g{background:linear-gradient(135deg,var(--gold),#ff9800);color:#000}
+.btn.o{background:#1a212c;color:#aab}
+.btn.p::after,.btn.g::after{content:'';position:absolute;inset:0;background:linear-gradient(110deg,transparent 40%,rgba(255,255,255,.35) 50%,transparent 60%);transform:translateX(-120%);animation:shine 3s infinite}
+@keyframes shine{to{transform:translateX(120%)}}
+.row{display:flex;gap:10px;margin-top:16px}.row .btn{flex:1}
+.stack{display:flex;flex-direction:column;gap:9px;margin-top:14px}
+.win{text-align:center;padding:6px 0}
+.win h2{font-size:1.5rem;color:var(--gold);letter-spacing:3px;margin:10px 0;text-shadow:2px 2px 0 var(--red)}
+.sum{text-align:left;padding:16px;line-height:1.9;border:1px solid var(--gold);background:rgba(255,193,7,.05)}
+.sum b{color:var(--gold)}
+.qr{margin:16px 0;text-align:center}.qr img{width:140px;height:140px;padding:8px;background:#fff;border:3px solid var(--gold)}
+.foot{text-align:center;margin-top:18px;font:800 .6rem var(--fh);letter-spacing:2px;color:#556}
+.pop{display:none;position:fixed;inset:0;z-index:60;background:rgba(0,0,0,.85);backdrop-filter:blur(8px);align-items:center;justify-content:center;padding:20px}
+.pop.show{display:flex}
+.pbox{width:100%;max-width:380px;padding:34px 24px;text-align:center;background:#0d1117;border:2px solid var(--gold);box-shadow:0 0 60px rgba(211,47,47,.5);animation:pop .5s}
+.pbox .e{font-size:3.6rem}.pbox h2{color:var(--gold);letter-spacing:3px;font-size:1.3rem;margin:8px 0}.pbox p{margin-bottom:18px;line-height:1.6}
+.pbox .btn{margin-top:8px}
+.toast{position:fixed;bottom:28px;left:50%;transform:translate(-50%,120px);z-index:70;padding:12px 22px;background:var(--red);color:#fff;font:800 .75rem var(--fh);letter-spacing:2px;transition:.4s;opacity:0;pointer-events:none;max-width:90vw;text-align:center}
+.toast.show{transform:translate(-50%,0);opacity:1}.toast.success{background:var(--gold);color:#000}
+.flash{position:fixed;inset:0;z-index:80;pointer-events:none;background:radial-gradient(circle,#fff,var(--arc) 40%,transparent 70%);opacity:0}
+.flash.go{animation:fl .8s ease-out}
+@keyframes fl{0%{opacity:.9;transform:scale(.2)}100%{opacity:0;transform:scale(2.5)}}
+.ember{position:fixed;bottom:-10px;width:3px;height:3px;border-radius:50%;background:var(--gold);box-shadow:0 0 8px var(--gold);pointer-events:none;z-index:1;animation:rise linear infinite;will-change:transform,opacity}
+@keyframes rise{to{transform:translate(30px,-105vh);opacity:0}}
+
+/* birthday screens */
+.bd{position:fixed;inset:0;z-index:35;display:none;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:24px;text-align:center;overflow-y:auto;background:radial-gradient(ellipse at 50% 25%,rgba(211,47,47,.55),transparent 60%),radial-gradient(ellipse at 50% 100%,rgba(79,195,247,.25),transparent 55%),var(--bg)}
+.bd.show{display:flex;animation:fade .6s}
+.bd h2{font:900 1.4rem var(--fh);letter-spacing:4px;color:#fff;text-shadow:0 0 14px var(--red)}
+.age{font:900 7.5rem/1 var(--fh);color:var(--gold);text-shadow:0 0 30px rgba(255,193,7,.7),4px 4px 0 var(--red);animation:g2 2s ease-in-out infinite}
+@keyframes g2{50%{text-shadow:0 0 70px #ffc107,4px 4px 0 var(--red)}}
+.nm{font:800 1rem var(--fh);color:var(--arc);letter-spacing:3px}
+.bdate{padding:8px 16px;border:1px solid var(--gold);color:var(--gold);font:800 .75rem var(--fh);letter-spacing:3px}
+.bd .btn{max-width:320px;margin-top:10px}
+.cake{font-size:5.5rem;animation:float 3s ease-in-out infinite}
+.flames{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:300px}
+.fl{font-size:1.6rem;cursor:pointer;transition:.3s;filter:drop-shadow(0 0 8px var(--gold));animation:flick .6s ease-in-out infinite alternate}
+.fl:nth-child(odd){animation-delay:.3s}
+@keyframes flick{to{transform:scale(1.15) rotate(6deg)}}
+.fl.off{opacity:.15;filter:none;transform:scale(.6);animation:none}
+.letter{max-width:430px;text-align:left;padding:22px 20px;border:1px solid var(--gold);background:rgba(13,17,23,.88);line-height:1.7;font-size:1.08rem}
+.letter p{opacity:0;transform:translateY(10px);margin-bottom:11px;animation:lineIn .7s forwards}
+.letter .sig{color:var(--gold);font-style:italic;margin:0}
+@keyframes lineIn{to{opacity:1;transform:none}}
+.confetti{position:absolute;top:-40px;pointer-events:none;animation:cf linear infinite;will-change:transform}
+@keyframes cf{to{transform:translateY(115vh) rotate(720deg)}}
+@media(max-width:400px){.grid.three{grid-template-columns:1fr 1fr}.env-t{font-size:1.5rem}.age{font-size:6rem}}
+@media(prefers-reduced-motion:reduce){*{animation-duration:.01s!important;animation-iteration-count:1!important}}
+</style>
 </head>
 <body>
 
-<!-- ========== FLOATING DECORATIONS ========== -->
-<div class="floating-container" id="floatingContainer"></div>
+<svg width="0" height="0" style="position:absolute"><defs>
+<linearGradient id="gR" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#ff5252"/><stop offset="1" stop-color="#7f0000"/></linearGradient>
+<linearGradient id="gG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff176"/><stop offset=".6" stop-color="#ffc107"/><stop offset="1" stop-color="#ef8f00"/></linearGradient>
+<symbol id="hm" viewBox="0 0 100 120"><path d="M50 3C24 3 8 22 8 52v28c0 19 15 35 42 41 27-6 42-22 42-41V52C92 22 76 3 50 3z" fill="url(#gR)"/><path d="M50 18c-22 0-34 15-34 35v24c0 16 12 28 34 35 22-7 34-19 34-35V53c0-20-12-35-34-35z" fill="url(#gG)"/><path d="M50 18v30M30 26c6 6 14 8 20 8s14-2 20-8" stroke="#9a6a00" stroke-width="1.6" fill="none"/><path class="eye" d="M22 54l24 5v10l-26-4zM78 54l-24 5v10l26-4z"/><path d="M50 62v22M38 96h24M40 90h20" stroke="#8a1010" stroke-width="2.5" stroke-linecap="round"/></symbol>
+</defs></svg>
 
-<!-- ========== ENVELOPE OVERLAY ========== -->
-<div class="envelope-overlay" id="envelopeOverlay">
-  <div class="envelope-wrapper" id="openEnvelopeBtn">
-    <div class="envelope">
-      <div class="envelope-flap">💌</div>
-      <span class="envelope-seal">💝</span>
-      <div class="envelope-text">Untuk Nur</div>
-      <div class="envelope-sub">🌸 Sebuah jemputan khas 🌸</div>
-      <div class="click-hint">✨ Ketik untuk buka ✨</div>
-    </div>
-    <span class="sparkles" style="top:10px;left:20px;">✨</span>
-    <span class="sparkles" style="top:5px;right:25px;">💫</span>
-    <span class="sparkles" style="bottom:30px;left:10px;">🌸</span>
-    <span class="sparkles" style="bottom:20px;right:15px;">🦋</span>
-  </div>
+<!-- BOOT -->
+<div class="overlay" id="boot">
+  <div class="reactor"></div>
+  <div class="boot-t">INITIALIZING</div>
+  <div class="boot-bar"><i></i></div>
+  <div class="boot-s" id="bootMsg">SYAFIQ IS ONLINE...</div>
+  <div class="boot-skip" id="skipBoot">TAP TO SKIP ⏭</div>
 </div>
 
-<!-- ========== POPUP REACTION ========== -->
-<div class="popup-overlay" id="popupOverlay">
-  <div class="popup-box">
-    <div class="confetti-rain" id="confettiRain"></div>
-    <span class="popup-emoji" id="popupEmoji">🎉</span>
-    <h2 class="popup-title" id="popupTitle">YAY!</h2>
-    <p class="popup-message" id="popupMessage">Terima kasih! 💕</p>
-    <button class="popup-btn" onclick="closePopup()">✨ Jom teruskan! ✨</button>
-  </div>
+<!-- ENVELOPE -->
+<div class="overlay" id="env">
+  <svg class="helmet"><use href="#hm"/></svg>
+  <div class="env-t">AVENGERS<br>INVITATION</div>
+  <div class="env-s">◆ CLASSIFIED FOR: NURUL IYLIA ◆</div>
+  <div class="hint">⚡ TAP TO ACTIVATE</div>
 </div>
 
-<!-- ========== MAIN CARD ========== -->
-<div class="card" id="mainCard">
-  <div class="sticker-badge">💖 JOM! 💖</div>
-  <div class="music-btn" id="musicToggle">🎵 Muzik</div>
+<!-- POPUP / TOAST / FLASH -->
+<div class="pop" id="pop"><div class="pbox"><div class="e" id="pE">🤖</div><h2 id="pT"></h2><p id="pM"></p><div id="pActions"></div></div></div>
+<div class="toast" id="toast"></div>
+<div class="flash" id="flash"></div>
 
-  <!-- HEADER -->
-  <div class="header">
-    <span class="main-emoji">📚🌸</span>
-    <h1>Bazar Buku<br>Antarabangsa Johor</h1>
-    <p class="subtitle">✨ 21-25 Ogos 2026 ✨</p>
-  </div>
-
-  <!-- COUNTDOWN -->
-  <div class="countdown-box">
-    <span class="clock-icon">⏳</span>
-    <span id="countdownDisplay">Mengira hari...</span>
-    <span class="clock-icon">💗</span>
-  </div>
-
-  <!-- STEP INDICATOR -->
-  <div class="steps-indicator" id="stepsIndicator">
-    <span class="step-dot active" id="dot1"></span>
-    <span class="step-line"></span>
-    <span class="step-dot" id="dot2"></span>
-    <span class="step-line"></span>
-    <span class="step-dot" id="dot3"></span>
-  </div>
-
-  <!-- ========== STEP 1: INTRO ========== -->
-  <div class="step active" id="step1">
-    <div class="love-note">
-      <div class="greeting">
-        🌸 Untuk <span class="highlight-name">Nur</span> 🌸<br><br>
-        Saya rasa tempat macam ni lagi best kalau ada orang yang boleh share moment sama-sama.<br><br>
-        <span class="heart-beat">💗</span> 
-        <strong>Nak teman saya pergi Bazar Buku ni?</strong> 
-        <span class="heart-beat">💗</span>
-      </div>
-    </div>
-
-    <div class="event-poster">
-      <div class="event-title">
-        📖 <span class="highlight">BAZAR BUKU ANTARABANGSA</span> 📖
-      </div>
-      <div class="event-details-grid">
-        <div class="detail-card">
-          <span class="icon">📅</span>
-          <div class="value">21-25 Ogos</div>
-        </div>
-        <div class="detail-card">
-          <span class="icon">⏰</span>
-          <div class="value">10AM - 10PM</div>
-        </div>
-        <div class="detail-card">
-          <span class="icon">📍</span>
-          <div class="value">Paradigm Mall JB</div>
-        </div>
-      </div>
-      <div style="text-align:center;">
-        <a class="map-link" href="https://share.google/dNbxll9e8QVUNBN3t" target="_blank" rel="noopener noreferrer">
-          🗺️ Buka Google Maps
-        </a>
-      </div>
-    </div>
-
-    <button class="btn btn-primary" id="yesBtn">
-      💕 Saya nak pergi! 
-    </button>
-    <button class="btn btn-outline" id="softNoBtn" style="margin-top:10px;">
-      😔 Maaf, tak dapat...
-    </button>
-  </div>
-
-  <!-- ========== STEP 2: DATE & TIME ========== -->
-  <div class="step" id="step2">
-    <h3 style="text-align:center;color:#3d1a26;margin-bottom:15px;font-size:1.3rem;">
-      📅 Pilih Tarikh & Masa
-    </h3>
-    <p style="text-align:center;color:#c48090;font-size:0.9rem;margin-bottom:10px;">Pilih tarikh dulu, kemudian masa ya 💕</p>
-    
-    <label style="font-weight:700;color:#4a1e2e;">📆 Tarikh:</label>
-    <div class="option-grid" id="dateGrid"></div>
-    
-    <label style="font-weight:700;color:#4a1e2e;">⏰ Masa (10AM-10PM):</label>
-    <div class="time-grid" id="timeGrid"></div>
-
-    <div class="btn-group">
-      <button class="btn" onclick="navigateStep(1)">← Kembali</button>
-      <button class="btn btn-primary" id="nextToStep3" disabled>Seterusnya →</button>
-    </div>
-  </div>
-
-  <!-- ========== STEP 3: DINNER & MESSAGE ========== -->
-  <div class="step" id="step3">
-    <h3 style="text-align:center;color:#3d1a26;margin-bottom:15px;font-size:1.3rem;">
-      🍽️ Dinner & Pesanan Manis
-    </h3>
-
-    <label style="font-weight:700;color:#4a1e2e;">🍽️ Nak dinner sama-sama?</label>
-    <div class="dinner-toggle" id="dinnerToggle">
-      <div class="toggle-btn" data-dinner="YES">🍽️ Ya! Best!</div>
-      <div class="toggle-btn" data-dinner="NO">❌ Tak perlu</div>
-    </div>
-
-    <select id="dinnerType" style="margin:12px 0;display:none;">
-      <option value="">Pilih jenis makanan kegemaran...</option>
-      <option>Malaysian 🇲🇾</option>
-      <option>Japanese 🇯🇵</option>
-      <option>Korean 🇰🇷</option>
-      <option>Western 🍔</option>
-      <option>Chinese 🥢</option>
-      <option>Italian 🍝</option>
-      <option>Seafood 🦐</option>
-      <option>Steamboat 🍲</option>
-      <option>Anything - Awak pilih! 😊</option>
-    </select>
-
-    <label style="font-weight:700;color:#4a1e2e;">💬 Ada pesanan untuk saya?</label>
-    <textarea id="messageInput" placeholder="Contoh: Saya suka buku romance! 📖💕" 
-              style="min-height:70px;resize:vertical;margin-top:5px;"></textarea>
-
-    <div class="btn-group">
-      <button class="btn" onclick="navigateStep(2)">← Kembali</button>
-      <button class="btn btn-success" id="submitBtn">💕 Hantar Jawapan! 💕</button>
-    </div>
-  </div>
-
-  <!-- ========== SUCCESS SECTION ========== -->
-  <div id="successSection" class="success-section" style="display:none;"></div>
-
-  <!-- FOOTER -->
-  <div class="footer-note">
-    Made with <span class="heart">❤️</span> special for you
-  </div>
+<!-- BIRTHDAY 1 -->
+<div class="bd" id="bd1">
+  <div class="hint">🎂 SPECIAL BROADCAST 🎂</div>
+  <svg class="helmet" style="width:76px"><use href="#hm"/></svg>
+  <h2>HAPPY BIRTHDAY</h2>
+  <div class="age" id="ageEl">27</div>
+  <div class="nm">NURUL IYLIA MAISARAH</div>
+  <div class="bdate" id="bdBadge">2 OCTOBER 2026</div>
+  <button class="btn p" id="bdNext">🎂 MAKE A WISH</button>
 </div>
+
+<!-- BIRTHDAY WISH -->
+<div class="bd" id="bdW">
+  <h2>MAKE A WISH</h2>
+  <div class="cake">🎂</div>
+  <div class="flames" id="flames"></div>
+  <div class="hint" id="wishHint">TAP THE 27 CANDLES TO BLOW THEM OUT</div>
+  <button class="btn p" id="wishNext" style="display:none">💌 OPEN YOUR MESSAGE</button>
+</div>
+
+<!-- BIRTHDAY LETTER -->
+<div class="bd" id="bd2">
+  <h2>A MESSAGE FOR YOU</h2>
+  <div class="letter" id="letter">
+    <p>Dear Nurul Iylia,</p>
+    <p>Twenty-seven. New level unlocked. 🔓</p>
+    <p>Every hero has an origin story. Yours is the kind that makes people around you better, with a smile, a laugh, and a presence that turns ordinary days into missions worth showing up for.</p>
+    <p>Stark had his arc reactor. Cap had his shield. Thor had his hammer. You? You've got something rarer: a heart people feel safe around. 💛</p>
+    <p>This year, I hope you get the wins you've quietly worked for, the peace you deserve, laughs that hurt your stomach, and people who choose you every single time.</p>
+    <p>Be brave. Chase the big dreams. And when it gets heavy, remember: even Avengers need a team.</p>
+    <p>Happy 27th Birthday, Nurul Iylia Maisarah. 🎂<br>Semoga sentiasa bahagia, sihat, dan murah rezeki. 🤍</p>
+    <p>And because a birthday deserves more than words, I've planned a little mission for you. Sunset, dinner, movie. You just pick the day. 😎</p>
+    <p class="sig">— Syafiq<br>P.S. Statistically, this is your best year yet. 📊</p>
+  </div>
+  <button class="btn g" id="bdGo">⚡ ACCEPT THE MISSION</button>
+</div>
+
+<!-- MAIN CARD -->
+<main class="card" id="card">
+  <button class="sound-toggle" id="soundToggle" title="Toggle sound">🔊</button>
+  <span class="corner l">STARK INDUSTRIES</span><span class="corner r">AVENGERS OPS</span>
+  <div class="hero">
+    <svg class="helmet"><use href="#hm"/></svg>
+    <h1>SUNSET • DINNER • MOVIE<b>SPECIAL MISSION</b></h1>
+    <p class="sub">◆ FRIDAY OR SATURDAY ◆</p>
+  </div>
+  <div class="cd" id="cd"></div>
+  <div class="roster" id="roster"></div>
+  <div class="dots" id="dots"><span class="dot active"></span><span class="dl"></span><span class="dot"></span><span class="dl"></span><span class="dot"></span></div>
+
+  <section class="step active" id="step1">
+    <div class="brief">
+      <span class="q" id="quote"></span>
+      Miss <em>Nurul Iylia</em>,<br>
+      I have a <u>mission</u> this weekend. Nothing fancy — <em>sunset</em>, <em>dinner</em>, <em>movie</em>. But it's better with you than alone. 😎<br>
+      <strong style="color:var(--gold)">So... are you joining the Avengers?</strong>
+    </div>
+    <div class="plan">
+      <div><span class="i">📅</span><small>DAY</small><span>Fri / Sat — you pick</span></div>
+      <div><span class="i">🌇</span><small>SUNSET</small><span>7–8 PM · Tambak Pontian</span></div>
+      <div><span class="i">🍽️</span><small>DINNER</small><span>SDS / Halaman</span></div>
+      <div><span class="i">🎬</span><small>MOVIE</small><span>Paradigm Mall JB</span></div>
+    </div>
+    <a class="loc" href="https://share.google/dNbxll9e8QVUNBN3t" target="_blank" rel="noopener">📍 LOCATE VENUE</a>
+    <button class="btn p" id="yes">⚡ AVENGERS, ASSEMBLE!</button>
+    <button class="btn o" id="no" style="margin-top:9px">✖ NOT THIS TIME</button>
+  </section>
+
+  <section class="step" id="step2">
+    <div class="step-indicator">STEP 1 OF 2 — WHEN?</div>
+    <label>📅 CHOOSE YOUR DAY</label><div class="grid" id="gDay"></div>
+    <label>🌇 SUNSET SLOT (TAMBAK PONTIAN)</label><div class="grid" id="gSun"></div>
+    <div class="row"><button class="btn" onclick="go(1)">◀ BACK</button><button class="btn p" id="n3" disabled>NEXT ▶</button></div>
+  </section>
+
+  <section class="step" id="step3">
+    <div class="step-indicator">STEP 2 OF 2 — WHAT?</div>
+    <label>🍽️ DINNER SPOT</label><div class="grid" id="gDin"></div>
+    <label>🎬 MOVIE PICK</label><div class="grid" id="gMov"></div>
+    <label>🕐 MOVIE TIME</label><div class="grid three" id="gTim"></div>
+    <label>💬 A MESSAGE FOR ME?</label>
+    <textarea id="msg" maxlength="500" placeholder="e.g. Count me in!"></textarea>
+    <div class="char-count" id="charCount">0 / 500</div>
+    <div class="row"><button class="btn" onclick="go(2)">◀ BACK</button><button class="btn g" id="send" disabled>⚡ SEND RESPONSE</button></div>
+  </section>
+
+  <div id="done" style="display:none"></div>
+  <div class="foot">🛡️ STARK INDUSTRIES × AVENGERS · NURUL IYLIA MAISARAH 🛡️</div>
+</main>
 
 <script>
-  (function() {
-    // ============================================================
-    //  GOOGLE SHEETS INTEGRATION
-    //  Auto-save to database when user submits
-    // ============================================================
-    
-    const DB_API_URL = 'https://script.google.com/macros/s/AKfycbz0GcZ8GOirbc4A5RtRKYMXDQI-R29IlgzE0nsCZB3RX5mxWuZmNZ4zs6oDWuByJlfN/exec'; // <-- GANTI DENGAN URL WEB APP ANDA
-    
-    // ========== FLOATING DECORATIONS ==========
-    const floatingContainer = document.getElementById('floatingContainer');
-    const floatItems = ['❤️', '💕', '💗', '💖', '💝', '🌸', '🌷', '🦋', '✨', '💫', '🎀', '💐', '🩷', '📚', '🌺', '💌', '🎵', '🌟'];
-    
-    for (let i = 0; i < 40; i++) {
-      const item = document.createElement('span');
-      item.className = 'float-item';
-      item.textContent = floatItems[Math.floor(Math.random() * floatItems.length)];
-      item.style.left = Math.random() * 100 + '%';
-      item.style.fontSize = (14 + Math.random() * 30) + 'px';
-      item.style.animationDuration = (16 + Math.random() * 30) + 's';
-      item.style.animationDelay = Math.random() * 25 + 's';
-      floatingContainer.appendChild(item);
+(function(){
+'use strict';
+const $ = id => document.getElementById(id);
+const S = { day:null, sun:null, din:null, mov:null, tim:null };
+let saved = null, ac = null, typeQTimer = null, typeQInterval = null;
+let soundOn = true;
+
+/* Sound preference */
+try { soundOn = localStorage.getItem(CONFIG.SOUND_KEY) !== 'off'; } catch(e){}
+
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+
+function beep(f, d, v) {
+  if (!soundOn) return;
+  try {
+    ac = ac || new (window.AudioContext || window.webkitAudioContext)();
+    if (ac.state === 'suspended') ac.resume();
+    const o = ac.createOscillator(), g = ac.createGain();
+    o.frequency.value = f;
+    g.gain.value = v || .04;
+    o.connect(g); g.connect(ac.destination);
+    o.start();
+    g.gain.exponentialRampToValueAtTime(.0001, ac.currentTime + d);
+    o.stop(ac.currentTime + d);
+  } catch(e){}
+}
+const ok = () => { beep(660,.1); setTimeout(()=>beep(880,.1),100); setTimeout(()=>beep(1320,.2),200); };
+const vib = p => { try { navigator.vibrate && navigator.vibrate(p); } catch(e){} };
+function flash(){ const f = $('flash'); f.classList.remove('go'); void f.offsetWidth; f.classList.add('go'); }
+function confetti(box, n, dur){
+  const c = ['🎉','🎂','🎈','✨','💛','🔴','⚡'];
+  for (let i = 0; i < n; i++){
+    const e = document.createElement('span');
+    e.className = 'confetti';
+    e.textContent = c[i % c.length];
+    e.style.left = Math.random() * 100 + '%';
+    e.style.fontSize = 14 + Math.random() * 18 + 'px';
+    e.style.animationDuration = dur + Math.random() * 5 + 's';
+    e.style.animationDelay = Math.random() * 3 + 's';
+    box.appendChild(e);
+  }
+}
+
+/* Set nama assistant dalam boot message */
+$('bootMsg').textContent = CONFIG.ASSISTANT.toUpperCase() + ' IS ONLINE...';
+
+/* ============ SOUND TOGGLE ============ */
+function updateSoundIcon(){ $('soundToggle').textContent = soundOn ? '🔊' : '🔇'; }
+$('soundToggle').onclick = (e) => {
+  e.stopPropagation();
+  soundOn = !soundOn;
+  try { localStorage.setItem(CONFIG.SOUND_KEY, soundOn ? 'on' : 'off'); } catch(e){}
+  updateSoundIcon();
+  if (soundOn) beep(880, .1);
+};
+
+/* ============ BOOT ============ */
+let booted = false;
+function finishBoot(){
+  if (booted) return;
+  booted = true;
+  $('boot').classList.add('hidden');
+  if (soundOn) beep(880, .1);
+}
+addEventListener('load', () => {
+  updateSoundIcon();
+  setTimeout(finishBoot, 1900);
+});
+$('skipBoot').onclick = (e) => { e.stopPropagation(); finishBoot(); };
+$('boot').addEventListener('click', finishBoot);
+
+/* Embers (14 sahaja untuk performance) */
+for (let i = 0; i < 14; i++){
+  const e = document.createElement('i');
+  e.className = 'ember';
+  e.style.left = Math.random() * 100 + '%';
+  e.style.animationDuration = 6 + Math.random() * 9 + 's';
+  e.style.animationDelay = Math.random() * 8 + 's';
+  document.body.appendChild(e);
+}
+
+/* ============ SYAFIQ TYPING ============ */
+const Q = [
+  '"Miss, I\'ve detected a free weekend in your calendar."',
+  '"Miss, shall I prepare the suit? Or is charm enough?"',
+  '"Miss, my records suggest I\'m excellent company."',
+  '"Miss, this is not a drill. You might say no."',
+  '"Miss, I took the liberty of picking the perfect sunset spot."'
+];
+let qi = 0, qt = null;
+function typeQ(){
+  const el = $('quote'), t = Q[qi++ % Q.length];
+  let i = 0;
+  el.textContent = '';
+  clearInterval(qt);
+  qt = setInterval(() => {
+    el.textContent = t.slice(0, ++i);
+    if (i >= t.length) clearInterval(qt);
+  }, 38);
+}
+
+/* ============ ENVELOPE ============ */
+let opened = false;
+$('env').addEventListener('click', () => {
+  if (opened) return;
+  opened = true;
+  beep(880, .15, .06); vib(30);
+  $('env').classList.add('hidden');
+
+  try { saved = JSON.parse(localStorage.getItem(CONFIG.STORAGE_KEY) || 'null'); } catch(e){}
+
+  if (saved) {
+    startCard();
+    done(saved.status);
+  } else {
+    showBday();
+  }
+});
+
+/* ============ ROSTER ============ */
+const HERO = [['🤖','IRON MAN'],['🛡️','CAPTAIN'],['⚡','THOR'],['💚','HULK']];
+const roster = () => HERO.map((h, i) =>
+  `<div class="tile" style="animation-delay:${i*.15}s"><i>${h[0]}</i><span>${h[1]}</span></div>`
+).join('');
+
+function startCard(){
+  $('card').classList.add('show');
+  countdown();
+  $('roster').innerHTML = roster();
+  renderAll();
+  setTimeout(typeQ, 700);
+  typeQInterval = setInterval(typeQ, 12000);
+}
+
+/* ============ BIRTHDAY FLOW ============ */
+function showBday(){
+  const b = $('bd1');
+  b.classList.add('show');
+  $('ageEl').textContent = CONFIG.AGE;
+
+  const bday = new Date(CONFIG.BIRTHDAY);
+  const d = Math.ceil((bday - Date.now()) / 864e5);
+  const dateStr = bday.toLocaleDateString('en-GB', { day:'numeric', month:'long', year:'numeric' }).toUpperCase();
+  $('bdBadge').textContent = dateStr + (d > 0 ? ' · IN ' + d + (d > 1 ? ' DAYS' : ' DAY') : d > -1 ? ' · TODAY' : '');
+
+  confetti(b, 36, 5);
+  ok(); vib([30,40,30]);
+}
+
+$('bdNext').onclick = () => {
+  $('bd1').classList.remove('show');
+  $('bdW').classList.add('show');
+  beep(880, .1);
+
+  const F = $('flames');
+  F.innerHTML = '<span class="fl">🔥</span>'.repeat(CONFIG.AGE);
+  $('wishHint').textContent = `TAP THE ${CONFIG.AGE} CANDLES TO BLOW THEM OUT`;
+
+  F.querySelectorAll('.fl').forEach(f => f.onclick = () => {
+    if (f.classList.contains('off')) return;
+    f.classList.add('off');
+    beep(500 + Math.random() * 500, .08);
+    vib(10);
+    if (!F.querySelector('.fl:not(.off)')) {
+      $('wishHint').textContent = 'WISH SENT TO ' + CONFIG.ASSISTANT.toUpperCase() + ' 🚀';
+      $('wishNext').style.display = 'block';
+      flash(); ok(); vib([40,30,40]);
+      confetti($('bdW'), 40, 4);
     }
+  });
+};
 
-    // ========== STATE ==========
-    const state = {
-      selectedDate: null,
-      selectedTime: null,
-      dinner: null
-    };
-    
-    let savedResponse = null;
-    let countdownInterval = null;
+$('wishNext').onclick = () => {
+  $('bdW').classList.remove('show');
+  $('bd2').classList.add('show');
+  document.querySelectorAll('#letter p').forEach((p, i) => p.style.animationDelay = (.4 + i * 1.4) + 's');
+  beep(880, .1);
+};
 
-    // ========== ENVELOPE OPENING ==========
-    document.getElementById('openEnvelopeBtn').addEventListener('click', () => {
-      document.getElementById('envelopeOverlay').classList.add('hidden');
-      startCountdown();
-      renderDateTimeOptions();
-      
-      if (savedResponse) {
-        restoreSavedResponse();
-      } else {
-        setTimeout(() => {
-          showPopup('💌', 'Hai Nur! 🌸', 'Saya ada jemputan istimewa untuk awak...<br>Nak baca? 💕', null);
-        }, 400);
-      }
-    });
+$('bdGo').onclick = () => {
+  $('bd2').classList.remove('show');
+  startCard();
+  flash();
+  beep(1200, .1);
+};
 
-    // ========== COUNTDOWN ==========
-    function startCountdown() {
-      if (countdownInterval) clearInterval(countdownInterval);
-      
-      const targetDate = new Date("August 21, 2026 10:00:00").getTime();
-      const countdownEl = document.getElementById('countdownDisplay');
-      
-      function updateCountdown() {
-        const now = Date.now();
-        const distance = targetDate - now;
-        
-        if (distance <= 0) {
-          countdownEl.innerHTML = '🎉 Sedang berlangsung sekarang! 🎉';
-          return;
-        }
-        
-        const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-        const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-        const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-        
-        countdownEl.innerHTML = `${days} hari ${hours}j ${minutes}m ${seconds}s lagi 💗`;
-      }
-      
-      updateCountdown();
-      countdownInterval = setInterval(updateCountdown, 1000);
-    }
+/* ============ COUNTDOWN ============ */
+function countdown(){
+  const t = new Date(CONFIG.EVENT_DATE).getTime();
+  const el = $('cd');
 
-    // ========== MUSIC ==========
-    let bgMusic = null;
-    const musicBtn = document.getElementById('musicToggle');
-    
-    musicBtn.addEventListener('click', function() {
-      if (!bgMusic) {
-        bgMusic = new Audio('https://cdn.freesound.org/previews/675/675812_13265767-lq.mp3');
-        bgMusic.loop = true;
-        bgMusic.volume = 0.35;
-      }
-      if (bgMusic.paused) {
-        bgMusic.play().then(() => {
-          this.textContent = '🎵 Muzik On';
-          this.classList.add('playing');
-        }).catch(() => {
-          this.textContent = '🎵 Klik untuk muzik';
-        });
-      } else {
-        bgMusic.pause();
-        this.textContent = '🎵 Muzik';
-        this.classList.remove('playing');
-      }
-    });
+  const tick = () => {
+    const d = t - Date.now();
+    if (d <= 0) { el.className = 'cd done'; el.textContent = '🔴 MISSION DAY!'; return true; }
+    const v = [Math.floor(d/864e5), Math.floor(d%864e5/36e5), Math.floor(d%36e5/6e4), Math.floor(d%6e4/1e3)];
+    const l = ['DAYS','HRS','MIN','SEC'];
+    el.innerHTML = v.map((x, i) => `<div><b>${String(x).padStart(2,'0')}</b><span>${l[i]}</span></div>`).join('');
+    return false;
+  };
+  if (!tick()) {
+    const i = setInterval(() => { if (tick()) clearInterval(i); }, 1000);
+  }
+}
 
-    // ========== RENDER DATE & TIME OPTIONS ==========
-    function renderDateTimeOptions() {
-      const dates = [
-        '21 Ogos (Jumaat)',
-        '22 Ogos (Sabtu)',
-        '23 Ogos (Ahad)',
-        '24 Ogos (Isnin)',
-        '25 Ogos (Selasa)',
-        'Flexible 🌟'
-      ];
-      
-      const times = [
-        '10AM - 12PM 🌅',
-        '12PM - 2PM ☀️',
-        '2PM - 4PM 🌤️',
-        '4PM - 6PM 🌅',
-        '6PM - 8PM 🌆',
-        '8PM - 10PM 🌙',
-        'Flexible 🌟'
-      ];
+/* ============ OPTIONS ============ */
+const O = {
+  gDay: ['day', [['Friday','Friday','🌙'],['Saturday','Saturday','⭐']]],
+  gSun: ['sun', [
+    ['6:45 PM - 7:45 PM','6:45 – 7:45','🌇'],
+    ['7:00 PM - 8:00 PM','7:00 – 8:00','🌅'],
+    ['7:15 PM - 8:15 PM','7:15 – 8:15','🌆'],
+    ['Flexible','Flexible','✨']
+  ]],
+  gDin: ['din', [['SDS','SDS','🍽️'],['Halaman','Halaman','🍴']]],
+  gMov: ['mov', [
+    ['Horror Movie','Horror','👻'],
+    ['Avengers','Avengers','🦸'],
+    ['Not sure yet','Not sure','🤷']
+  ]],
+  gTim: ['tim', [
+    ['11:00 PM','11:00 PM','🌙'],
+    ['12:00 AM','12:00 AM','🌌'],
+    ['1:00 AM','1:00 AM','🌠']
+  ]]
+};
 
-      const dateGrid = document.getElementById('dateGrid');
-      const timeGrid = document.getElementById('timeGrid');
-
-      dateGrid.innerHTML = dates.map(d => 
-        `<div class="selectable-card" data-date="${d}">${d}</div>`
-      ).join('');
-
-      timeGrid.innerHTML = times.map(t => 
-        `<div class="selectable-card" data-time="${t}">${t}</div>`
-      ).join('');
-
-      dateGrid.querySelectorAll('.selectable-card').forEach(card => {
-        card.addEventListener('click', function() {
-          dateGrid.querySelectorAll('.selectable-card').forEach(c => c.classList.remove('selected'));
-          this.classList.add('selected');
-          state.selectedDate = this.dataset.date;
-          validateStep2();
-          showMiniPopup('📅', 'Tarikh dipilih!', 'Best! 🎉');
-        });
-      });
-
-      timeGrid.querySelectorAll('.selectable-card').forEach(card => {
-        card.addEventListener('click', function() {
-          timeGrid.querySelectorAll('.selectable-card').forEach(c => c.classList.remove('selected'));
-          this.classList.add('selected');
-          state.selectedTime = this.dataset.time;
-          validateStep2();
-          showMiniPopup('⏰', 'Masa dipilih!', 'Perfect! ✨');
-        });
-      });
-    }
-
-    function validateStep2() {
-      const btn = document.getElementById('nextToStep3');
-      btn.disabled = !(state.selectedDate && state.selectedTime);
-    }
-
-    // ========== POPUP SYSTEM ==========
-    function showPopup(emoji, title, message, callback) {
-      const overlay = document.getElementById('popupOverlay');
-      document.getElementById('popupEmoji').textContent = emoji;
-      document.getElementById('popupTitle').textContent = title;
-      document.getElementById('popupMessage').innerHTML = message;
-      
-      const confettiContainer = document.getElementById('confettiRain');
-      confettiContainer.innerHTML = '';
-      const confettiEmojis = ['🎉', '🎊', '💖', '✨', '💫', '🌸', '💝', '🎀', '💗', '🦋', '🌺', '💐', '💌', '🌟'];
-      
-      for (let i = 0; i < 50; i++) {
-        const piece = document.createElement('span');
-        piece.className = 'confetti-piece';
-        piece.textContent = confettiEmojis[Math.floor(Math.random() * confettiEmojis.length)];
-        piece.style.left = Math.random() * 100 + '%';
-        piece.style.animationDelay = Math.random() * 1.5 + 's';
-        piece.style.animationDuration = (2 + Math.random() * 3.5) + 's';
-        piece.style.fontSize = (16 + Math.random() * 30) + 'px';
-        confettiContainer.appendChild(piece);
-      }
-      
-      overlay.classList.add('show');
-      window._popupCallback = callback;
-      
-      if (!callback) {
-        setTimeout(() => {
-          closePopup();
-        }, 4000);
-      }
-    }
-
-    function showMiniPopup(emoji, title, message) {
-      const overlay = document.getElementById('popupOverlay');
-      document.getElementById('popupEmoji').textContent = emoji;
-      document.getElementById('popupTitle').textContent = title;
-      document.getElementById('popupMessage').textContent = message;
-      
-      const confettiContainer = document.getElementById('confettiRain');
-      confettiContainer.innerHTML = '';
-      const miniConfetti = ['✨', '💫', '💖', '🌸', '💗'];
-      for (let i = 0; i < 20; i++) {
-        const piece = document.createElement('span');
-        piece.className = 'confetti-piece';
-        piece.textContent = miniConfetti[Math.floor(Math.random() * miniConfetti.length)];
-        piece.style.left = Math.random() * 100 + '%';
-        piece.style.animationDelay = Math.random() * 0.8 + 's';
-        piece.style.animationDuration = (1.5 + Math.random() * 2) + 's';
-        confettiContainer.appendChild(piece);
-      }
-      
-      overlay.classList.add('show');
-      setTimeout(() => {
-        overlay.classList.remove('show');
-      }, 2000);
-    }
-
-    window.closePopup = function() {
-      document.getElementById('popupOverlay').classList.remove('show');
-      if (window._popupCallback) {
-        const cb = window._popupCallback;
-        window._popupCallback = null;
-        setTimeout(cb, 300);
-      }
-    };
-
-    // ========== NAVIGATION ==========
-    window.navigateStep = function(step) {
-      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-      document.getElementById('step' + step).classList.add('active');
-      
-      for (let i = 1; i <= 3; i++) {
-        const dot = document.getElementById('dot' + i);
-        dot.classList.remove('active', 'done');
-        if (i < step) dot.classList.add('done');
-        if (i === step) dot.classList.add('active');
-      }
-      
-      document.querySelector('.card').scrollTo({ top: 0, behavior: 'smooth' });
-    };
-
-    // ========== BUTTON HANDLERS ==========
-    document.getElementById('yesBtn').addEventListener('click', () => {
-      const reactions = [
-        { emoji: '🥳', title: 'YAY! BESTNYA! 💕', message: 'Saya sangat gembira!<br>Jom pilih tarikh! 📅' },
-        { emoji: '🎉', title: 'WOOHOO! 🎊', message: 'Tak sabar nak jumpa!<br>Pilih tarikh jom! 💖' },
-        { emoji: '💖', title: 'TERIMA KASIH! 💗', message: 'Awak buat hati saya berbunga!<br>Pilih tarikh ya! 🌸' },
-        { emoji: '🦋', title: 'BESTNYA! 🌺', message: 'Saya rasa teruja sangat ni!<br>Jom pilih tarikh! 💝' }
-      ];
-      const reaction = reactions[Math.floor(Math.random() * reactions.length)];
-      
-      showPopup(reaction.emoji, reaction.title, reaction.message, () => {
-        navigateStep(2);
-      });
-    });
-
-    document.getElementById('softNoBtn').addEventListener('click', () => {
-      showPopup('😢', 'Tak mengapa...', 'Saya faham.<br>Lain kali kita cuba ya? 🌸', () => {
-        submitResponse('NO');
-      });
-    });
-
-    document.getElementById('nextToStep3').addEventListener('click', () => {
-      navigateStep(3);
-    });
-
-    // Dinner toggle
-    document.querySelectorAll('#dinnerToggle .toggle-btn').forEach(btn => {
-      btn.addEventListener('click', function() {
-        const parent = document.getElementById('dinnerToggle');
-        parent.querySelectorAll('.toggle-btn').forEach(b => {
-          b.classList.remove('selected-yes', 'selected-no');
-        });
-        
-        const value = this.dataset.dinner;
-        if (value === 'YES') {
-          this.classList.add('selected-yes');
-          document.getElementById('dinnerType').style.display = 'block';
-          showMiniPopup('🍽️', 'Dinner!', 'Bestnya makan sama! 🍝');
-        } else {
-          this.classList.add('selected-no');
-          document.getElementById('dinnerType').style.display = 'none';
-        }
-        state.dinner = value;
-      });
-    });
-
-    // ========== SUBMIT TO GOOGLE SHEETS ==========
-    document.getElementById('submitBtn').addEventListener('click', () => {
-      if (!state.selectedDate || !state.selectedTime) {
-        alert('📅 Sila pilih tarikh dan masa dulu ya! 💕');
-        navigateStep(2);
-        return;
-      }
-      if (!state.dinner) {
-        alert('🍽️ Pilih ya atau tidak untuk dinner!');
-        return;
-      }
-      
-      // Prepare data
-      const payload = {
-        nama: 'Nur',
-        tarikh: state.selectedDate || 'N/A',
-        masa: state.selectedTime || 'N/A',
-        dinner: state.dinner || 'NO',
-        dinnerType: document.getElementById('dinnerType')?.value || '',
-        pesanan: document.getElementById('messageInput')?.value || '',
-        status: 'YES'
+function renderAll(){
+  for (const id in O){
+    const [k, items] = O[id], g = $(id);
+    g.innerHTML = items.map(i =>
+      `<div class="opt" role="button" tabindex="0" data-v="${esc(i[0])}"><i>${i[2]}</i>${esc(i[1])}</div>`
+    ).join('');
+    g.querySelectorAll('.opt').forEach(c => {
+      const pick = () => {
+        g.querySelectorAll('.opt').forEach(x => x.classList.remove('sel'));
+        c.classList.add('sel');
+        S[k] = c.dataset.v;
+        beep(1200, .08); vib(15); check();
       };
-      
-      savedResponse = payload;
-      
-      // ========== SAVE TO GOOGLE SHEETS ==========
-      const apiUrl = 'https://script.google.com/macros/s/AKfycbz0GcZ8GOirbc4A5RtRKYMXDQI-R29IlgzE0nsCZB3RX5mxWuZmNZ4zs6oDWuByJlfN/exec'; // <-- GANTI DENGAN URL ANDA
-      
-      // Show loading
-      const submitBtn = document.getElementById('submitBtn');
-      submitBtn.textContent = '⏳ Menyimpan...';
-      submitBtn.disabled = true;
-      
-      fetch(apiUrl, {
-        method: 'POST',
-        mode: 'no-cors', // Important for CORS
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload)
-      })
-      .then(response => {
-        // No-cors mode returns opaque response
-        // We'll assume success
-        console.log('✅ Data sent to Google Sheets');
-        showSuccessScreen('YES');
-        
-        // Send invite via WhatsApp (optional)
-        sendWhatsAppInvite();
-      })
-      .catch(error => {
-        console.error('❌ Error:', error);
-        // Still show success since no-cors may not return proper response
-        showSuccessScreen('YES');
-        showMiniPopup('✅', 'Disimpan!', 'Data berjaya dihantar! 📊');
-      })
-      .finally(() => {
-        submitBtn.textContent = '💕 Hantar Jawapan! 💕';
-        submitBtn.disabled = false;
-      });
+      c.onclick = pick;
+      c.onkeydown = e => { if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); pick(); } };
     });
+  }
+}
 
-    // ========== SEND WHATSAPP INVITE ==========
-    function sendWhatsAppInvite() {
-      const phoneNumber = '60123456789'; // <-- Ganti dengan no WhatsApp Nur
-      const inviteLink = window.location.href;
-      const message = `🌸 Jemputan Bazar Buku Johor 2026!%0A%0AJom pergi sama-sama! 📚✨%0A%0AKlik link ini: ${encodeURIComponent(inviteLink)}%0A%0A💕 Jumpa nanti!`;
-      
-      // Buka WhatsApp - user boleh pilih nak hantar atau tidak
-      // window.open(`https://wa.me/${phoneNumber}?text=${message}`, '_blank');
-    }
+function check(){
+  $('n3').disabled = !(S.day && S.sun);
+  $('send').disabled = !(S.din && S.mov && S.tim);
+}
 
-    // ========== SHOW SUCCESS SCREEN ==========
-    function showSuccessScreen(answer) {
-      document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
-      document.getElementById('stepsIndicator').style.display = 'none';
-      
-      const successSection = document.getElementById('successSection');
-      successSection.style.display = 'block';
-      
-      if (answer === 'YES') {
-        successSection.innerHTML = `
-          <div class="success-icon">🎉</div>
-          <h2 class="success-title">Jumpa Nanti! 💕</h2>
-          <p style="color:#5a3a44;font-size:1.1rem;">Saya sangat teruja! 📚✨</p>
-          <div class="summary-box">
-            <strong>📅 Tarikh:</strong> ${savedResponse?.tarikh || 'N/A'}<br>
-            <strong>⏰ Masa:</strong> ${savedResponse?.masa || 'N/A'}<br>
-            <strong>🍽️ Dinner:</strong> ${savedResponse?.dinner === 'YES' ? 'Ya! Makan sama-sama 🍝' : 'Tak perlu'}<br>
-            ${savedResponse?.dinner === 'YES' && savedResponse?.dinnerType ? `<strong>🍴 Pilihan:</strong> ${savedResponse.dinnerType}<br>` : ''}
-            ${savedResponse?.pesanan ? `<strong>💬 Pesanan:</strong> "${savedResponse.pesanan}"<br>` : ''}
-          </div>
-          
-          <div class="qr-container">
-            <img id="qrCode" src="" alt="QR Code" style="width:150px;height:150px;border-radius:15px;border:3px solid #ffb8cc;padding:8px;background:white;">
-            <p>📱 Scan untuk buka jemputan</p>
-          </div>
-          
-          <div class="action-buttons">
-            <a class="btn btn-primary" href="${GOOGLE_MAPS_LINK}" target="_blank">
-              🗺️ Buka Google Maps
-            </a>
-            <a class="btn btn-primary" href="${GOOGLE_CALENDAR_LINK}" target="_blank">
-              📅 Simpan ke Google Calendar
-            </a>
-            <button class="btn btn-success" onclick="shareInvite()">📤 Kongsi Jemputan</button>
-            <button class="btn btn-outline" onclick="editResponse()">✏️ Ubah Jawapan</button>
-          </div>
-        `;
-        
-        // Generate QR Code
-        const qrImg = document.getElementById('qrCode');
-        if (qrImg) {
-          qrImg.src = `https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(window.location.href)}`;
-        }
-      } else {
-        successSection.innerHTML = `
-          <div class="success-icon">🌸</div>
-          <h2 class="success-title">Tak Mengapa</h2>
-          <p style="color:#5a3a44;font-size:1.1rem;">Saya hargai kejujuran awak.<br>Lain kali kita cuba! 💕</p>
-          <div class="action-buttons">
-            <button class="btn btn-outline" onclick="editResponse()">✏️ Ubah Jawapan</button>
-          </div>
-        `;
-      }
-      
-      successSection.scrollIntoView({ behavior: 'smooth', block: 'center' });
-    }
+/* Message char counter */
+$('msg').addEventListener('input', e => {
+  const len = e.target.value.length;
+  const cc = $('charCount');
+  cc.textContent = len + ' / 500';
+  cc.classList.toggle('warn', len > 400);
+});
 
-    // ========== SHARE INVITE ==========
-    window.shareInvite = function() {
-      const inviteLink = window.location.href;
-      
-      const whatsappUrl = `https://wa.me/?text=🌸%20Jemputan%20Bazar%20Buku%20Johor%202026!%0A%0A${encodeURIComponent(inviteLink)}%0A%0A📅%20Jom%20pergi%20sama-sama!%20💕`;
-      const emailUrl = `mailto:?subject=🌸 Jemputan Bazar Buku Johor 2026&body=Hi!%0A%0ASaya ada jemputan istimewa untuk awak!%0A%0A${encodeURIComponent(inviteLink)}%0A%0AJom pergi sama-sama! 💕`;
-      
-      showPopup('📤', 'Kongsi Jemputan', `
-        Pilih platform untuk kongsi:<br><br>
-        <a href="${whatsappUrl}" target="_blank" style="display:inline-block;margin:5px;padding:12px 25px;background:#25D366;color:white;border-radius:50px;text-decoration:none;font-weight:700;">💬 WhatsApp</a>
-        <a href="${emailUrl}" style="display:inline-block;margin:5px;padding:12px 25px;background:#EA4335;color:white;border-radius:50px;text-decoration:none;font-weight:700;">📧 Email</a>
-        <br><br>
-        <button onclick="copyInviteLink()" style="padding:12px 25px;background:#ff4d6d;color:white;border:none;border-radius:50px;font-weight:700;cursor:pointer;">📋 Salin Link</button>
-      `, null);
-    };
+/* ============ POPUP / TOAST / NAV ============ */
+function popup(e, t, m, actions){
+  $('pE').textContent = e;
+  $('pT').textContent = t;
+  $('pM').innerHTML = m;
+  const box = $('pActions');
+  box.innerHTML = '';
 
-    // ========== COPY INVITE LINK ==========
-    window.copyInviteLink = function() {
-      const inviteLink = window.location.href;
-      navigator.clipboard.writeText(inviteLink).then(() => {
-        showMiniPopup('✅', 'Disalin!', 'Link jemputan disalin ke clipboard! 📋');
-        closePopup();
-      }).catch(() => {
-        const textarea = document.createElement('textarea');
-        textarea.value = inviteLink;
-        document.body.appendChild(textarea);
-        textarea.select();
-        document.execCommand('copy');
-        document.body.removeChild(textarea);
-        showMiniPopup('✅', 'Disalin!', 'Link jemputan disalin! 📋');
-        closePopup();
-      });
-    };
+  if (Array.isArray(actions) && actions.length){
+    actions.forEach(a => {
+      const b = document.createElement('button');
+      b.className = 'btn ' + (a.cls || 'o');
+      b.textContent = a.label;
+      b.onclick = () => { closePopup(); if (a.fn) setTimeout(a.fn, 250); };
+      box.appendChild(b);
+    });
+  } else {
+    const b = document.createElement('button');
+    b.className = 'btn g';
+    b.textContent = 'CONTINUE';
+    b.onclick = closePopup;
+    box.appendChild(b);
+  }
+  $('pop').classList.add('show');
+  beep(880, .08);
+}
 
-    // ========== EDIT RESPONSE ==========
-    window.editResponse = function() {
-      if (!savedResponse) {
-        document.getElementById('successSection').style.display = 'none';
-        document.getElementById('stepsIndicator').style.display = 'flex';
-        navigateStep(1);
-        return;
-      }
-      
-      const response = savedResponse;
-      
-      if (response.tarikh && response.tarikh !== 'N/A') {
-        state.selectedDate = response.tarikh;
-        document.querySelectorAll('#dateGrid .selectable-card').forEach(card => {
-          card.classList.remove('selected');
-          if (card.dataset.date === response.tarikh) card.classList.add('selected');
-        });
-      }
-      
-      if (response.masa && response.masa !== 'N/A') {
-        state.selectedTime = response.masa;
-        document.querySelectorAll('#timeGrid .selectable-card').forEach(card => {
-          card.classList.remove('selected');
-          if (card.dataset.time === response.masa) card.classList.add('selected');
-        });
-      }
-      
-      if (response.dinner) {
-        state.dinner = response.dinner;
-        document.querySelectorAll('#dinnerToggle .toggle-btn').forEach(btn => {
-          btn.classList.remove('selected-yes', 'selected-no');
-          if (btn.dataset.dinner === response.dinner) {
-            if (response.dinner === 'YES') {
-              btn.classList.add('selected-yes');
-              document.getElementById('dinnerType').style.display = 'block';
-            } else {
-              btn.classList.add('selected-no');
-              document.getElementById('dinnerType').style.display = 'none';
-            }
-          }
-        });
-      }
-      
-      if (response.dinnerType) document.getElementById('dinnerType').value = response.dinnerType;
-      if (response.pesanan) document.getElementById('messageInput').value = response.pesanan;
-      
-      validateStep2();
-      document.getElementById('successSection').style.display = 'none';
-      document.getElementById('stepsIndicator').style.display = 'flex';
-      navigateStep(1);
-      showMiniPopup('✏️', 'Ubah Jawapan', 'Pilih semula ya! 💕');
-      document.querySelector('.card').scrollTo({ top: 0, behavior: 'smooth' });
-    };
+window.closePopup = () => { $('pop').classList.remove('show'); };
 
-    // ========== SUBMIT RESPONSE (Called from buttons) ==========
-    function submitResponse(answer) {
-      const payload = {
-        nama: 'Nur',
-        tarikh: state.selectedDate || 'N/A',
-        masa: state.selectedTime || 'N/A',
-        dinner: state.dinner || 'NO',
-        dinnerType: document.getElementById('dinnerType')?.value || '',
-        pesanan: document.getElementById('messageInput')?.value || '',
-        status: answer
-      };
-      
-      savedResponse = payload;
-      
-      // Send to Google Sheets
-      const apiUrl = 'https://script.google.com/macros/s/YOUR_DEPLOYMENT_ID/exec';
-      
-      fetch(apiUrl, {
+let tt;
+function toast(m, type){
+  const e = $('toast');
+  e.textContent = m;
+  e.className = 'toast show ' + (type || '');
+  clearTimeout(tt);
+  tt = setTimeout(() => e.classList.remove('show'), 2200);
+  type === 'success' ? ok() : beep(250, .2, .06);
+}
+
+window.go = n => {
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  $('step' + n).classList.add('active');
+  document.querySelectorAll('.dot').forEach((d, i) => {
+    d.className = 'dot' + (i + 1 < n ? ' done' : i + 1 === n ? ' active' : '');
+  });
+  $('card').scrollTo({ top:0, behavior:'smooth' });
+  beep(660, .06, .03);
+
+  /* Clear typing interval bila keluar step 1 */
+  if (n !== 1 && typeQInterval) {
+    clearInterval(typeQInterval);
+    typeQInterval = null;
+  }
+};
+
+/* ============ BACKEND ============ */
+async function post(p, btn){
+  const t = btn && btn.textContent;
+  if (btn) { btn.textContent = 'SENDING...'; btn.disabled = true; }
+  p.userAgent = navigator.userAgent.slice(0, 200);
+  p.timestamp = new Date().toISOString();
+  let err;
+
+  for (let i = 0; i < 2; i++){
+    try {
+      const r = await fetch(CONFIG.API_URL, {
         method: 'POST',
-        mode: 'no-cors',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(payload)
-      })
-      .then(() => {
-        showSuccessScreen(answer);
-        if (answer === 'YES') {
-          showMiniPopup('🎉', 'Terima Kasih!', 'Data disimpan di Google Sheets! 📊');
-        }
-      })
-      .catch(() => {
-        showSuccessScreen(answer);
+        mode: 'cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(p),
+        redirect: 'follow'
       });
+      if (!r.ok) throw new Error('HTTP ' + r.status);
+      const j = await r.json();
+      if (j.status !== 'success') throw new Error(j.message || 'Server error');
+      if (btn) { btn.textContent = t; btn.disabled = false; }
+      return { ok: true };
+    } catch(e) {
+      err = e;
+      if (i < 1) await new Promise(r => setTimeout(r, 1200));
     }
+  }
+  if (btn) { btn.textContent = t; btn.disabled = false; }
+  return { ok: false, error: err.message };
+}
 
-    // ========== RESTORE SAVED RESPONSE ==========
-    function restoreSavedResponse() {
-      if (savedResponse) {
-        submitResponse(savedResponse.status);
+const store = d => { try { localStorage.setItem(CONFIG.STORAGE_KEY, JSON.stringify(d)); } catch(e){} };
+
+const payload = st => ({
+  nama: 'Nurul Iylia Maisarah Binti Mustafar',
+  status: st,
+  day: S.day || 'N/A',
+  sunset: S.sun || 'N/A',
+  dinnerPlace: S.din || 'N/A',
+  movie: S.mov || 'N/A',
+  movieTime: S.tim || 'N/A',
+  message: ($('msg').value || '').slice(0, 500)
+});
+
+/* ============ BUTTONS ============ */
+$('yes').onclick = () => {
+  beep(1200, .08); vib([20,30,20]); flash();
+  const r = [
+    ['😎','AVENGERS ASSEMBLE!',"Let's configure the mission."],
+    ['🔴', CONFIG.ASSISTANT + ':','"Excellent choice, miss."'],
+    ['⚡','APPROVED','Pick your day and time.']
+  ][Math.floor(Math.random() * 3)];
+  popup(r[0], r[1], r[2], [{ label:'CONTINUE ▶', cls:'p', fn:() => go(2) }]);
+};
+
+/* 'no' button dengan confirmation */
+$('no').onclick = () => {
+  beep(250, .2, .06);
+  popup('🤔','ARE YOU SURE?', CONFIG.ASSISTANT + ': "Miss, this mission is non-refundable. Reconsider?"', [
+    { label:'⚡ WAIT, I\'M IN!', cls:'p', fn:() => { $('yes').click(); } },
+    { label:'✖ YES, DECLINE', cls:'o', fn: async () => {
+      const p = payload('NO');
+      saved = p; store(p);
+      const r = await post(p);
+      done('NO');
+      toast(r.ok ? 'Response sent' : 'Saved offline', r.ok ? 'success' : '');
+    }}
+  ]);
+};
+
+$('n3').onclick = () => { go(3); check(); };
+
+/* Confirm before send */
+$('send').onclick = () => {
+  popup('📡','CONFIRM MISSION?', CONFIG.ASSISTANT + ' will lock in your choices and notify the team. Proceed?', [
+    { label:'◀ REVIEW', cls:'o' },
+    { label:'⚡ SEND IT', cls:'g', fn: async () => {
+      const p = payload('YES');
+      const r = await post(p, $('send'));
+      saved = p; store(p);
+      if (r.ok) {
+        done('YES');
+        toast('Mission locked 🔴', 'success');
+        vib([50,40,50]);
+      } else {
+        popup('⚠️','SYSTEM ERROR',`Could not send.<br><small>${esc(r.error)}</small><br>Your answer is saved. Try again?`, [
+          { label:'🔁 RETRY', cls:'p', fn:() => $('send').click() },
+          { label:'CLOSE', cls:'o' }
+        ]);
       }
-    }
+    }}
+  ]);
+};
 
-    // ========== CHECK FOR EXISTING DATA ==========
-    function checkExistingData() {
-      // Optional: Check if there's already data in Google Sheets for this user
-      // You can implement this if needed
-    }
+/* ============ RESULT ============ */
+function done(a){
+  document.querySelectorAll('.step').forEach(s => s.classList.remove('active'));
+  $('dots').style.display = 'none';
+  const d = $('done');
+  d.style.display = 'block';
 
-    console.log('🌸💕 Jemputan Bazar Buku Johor 2026 💕🌸');
-    console.log('📍 Maps:', GOOGLE_MAPS_LINK);
-    console.log('📅 Calendar:', GOOGLE_CALENDAR_LINK);
-    console.log('📊 Database: Google Sheets');
-    console.log('✨ Status: READY WITH AUTO DB! ✨');
-    
-  })();
+  if (a === 'YES'){
+    const r = saved || {};
+    d.innerHTML = `
+      <div class="win">
+        <svg class="helmet" style="width:90px"><use href="#hm"/></svg>
+        <h2>AVENGERS ASSEMBLED</h2>
+        <p>${CONFIG.ASSISTANT}: "Miss, you said yes. I suggest Sir doesn't mess this up."</p>
+      </div>
+      <div class="sum">
+        <b>NAME:</b> Nurul Iylia Maisarah<br>
+        <b>DAY:</b> ${esc(r.day || 'N/A')}<br>
+        <b>SUNSET:</b> ${esc(r.sunset || 'N/A')}<br>
+        <b>DINNER:</b> ${esc(r.dinnerPlace || 'N/A')}<br>
+        <b>MOVIE:</b> ${esc(r.movie || 'N/A')}<br>
+        <b>TIME:</b> ${esc(r.movieTime || 'N/A')}
+        ${r.message ? `<br><b>MESSAGE:</b> "${esc(r.message)}"` : ''}
+      </div>
+      <div class="qr">
+        <img id="qr" alt="QR" loading="lazy" onerror="this.style.display='none';this.nextElementSibling.style.display='block'">
+        <p style="display:none;color:var(--gold);font-size:.75rem;margin-top:6px">QR unavailable — use SHARE below</p>
+        <p style="color:#889;font-size:.75rem;letter-spacing:2px;margin-top:6px">SCAN TO RELOAD</p>
+      </div>
+      <div class="stack">
+        <a class="btn p" href="${CONFIG.MAPS_SUNSET}" target="_blank" rel="noopener">📍 TAMBAK PONTIAN</a>
+        <a class="btn p" href="${CONFIG.MAPS_MOVIE}" target="_blank" rel="noopener">🎬 PARADIGM MALL JB</a>
+        <a class="btn p" href="${CONFIG.CALENDAR_URL}" target="_blank" rel="noopener">📅 ADD TO CALENDAR</a>
+        <button class="btn g" onclick="shareInvite()">📤 SHARE</button>
+        <button class="btn o" onclick="editResponse()">✏️ EDIT</button>
+        <button class="btn o" onclick="resetAll()">🔄 RESET</button>
+      </div>`;
+    const qr = $('qr');
+    if (qr) qr.src = 'https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=' + encodeURIComponent(location.href);
+    flash(); ok();
+  } else {
+    d.innerHTML = `
+      <div class="win">
+        <div style="font-size:4rem">🤖</div>
+        <h2>NO PROBLEM</h2>
+        <p>${CONFIG.ASSISTANT}: "Noted, miss. Maybe next time."</p>
+      </div>
+      <div class="stack">
+        <button class="btn o" onclick="editResponse()">✏️ EDIT ANSWER</button>
+        <button class="btn o" onclick="resetAll()">🔄 RESET</button>
+      </div>`;
+  }
+  d.scrollIntoView({ behavior:'smooth', block:'center' });
+}
+
+/* ============ SHARE / COPY ============ */
+window.shareInvite = () => {
+  const l = location.href;
+  popup('📤','SHARE',`
+    <a class="btn g" style="margin-bottom:8px" target="_blank" rel="noopener" href="https://wa.me/?text=${encodeURIComponent('Avengers invitation for Nurul Iylia\n' + l)}">WHATSAPP</a>
+    <a class="btn p" style="margin-bottom:8px" href="mailto:?subject=Avengers Invitation&body=${encodeURIComponent(l)}">EMAIL</a>
+    <button class="btn o" onclick="copyLink()">COPY LINK</button>
+  `);
+};
+
+window.copyLink = () => {
+  const l = location.href;
+  const done = () => { toast('Link copied!', 'success'); setTimeout(closePopup, 600); };
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(l).then(done).catch(fallbackCopy);
+  } else {
+    fallbackCopy();
+  }
+  function fallbackCopy(){
+    const ta = document.createElement('textarea');
+    ta.value = l;
+    ta.style.position = 'fixed'; ta.style.opacity = '0';
+    document.body.appendChild(ta);
+    ta.select();
+    try { document.execCommand('copy'); done(); }
+    catch(e) { toast('Cannot copy — copy manually'); }
+    document.body.removeChild(ta);
+  }
+};
+
+/* ============ RESTORE / EDIT / RESET ============ */
+function restore(id, k, v){
+  if (!v || v === 'N/A') return;
+  S[k] = v;
+  $(id).querySelectorAll('.opt').forEach(c => c.classList.toggle('sel', c.dataset.v === v));
+}
+
+window.editResponse = () => {
+  $('done').style.display = 'none';
+  $('dots').style.display = 'flex';
+  if (saved){
+    restore('gDay','day',saved.day);
+    restore('gSun','sun',saved.sunset);
+    restore('gDin','din',saved.dinnerPlace);
+    restore('gMov','mov',saved.movie);
+    restore('gTim','tim',saved.movieTime);
+    $('msg').value = saved.message || '';
+    $('msg').dispatchEvent(new Event('input'));
+    check();
+  }
+  go(1);
+  toast('Edit mode', 'success');
+};
+
+window.resetAll = () => {
+  try { localStorage.removeItem(CONFIG.STORAGE_KEY); } catch(e){}
+  saved = null;
+  for (const k in S) S[k] = null;
+  document.querySelectorAll('.opt').forEach(c => c.classList.remove('sel'));
+  $('msg').value = '';
+  $('msg').dispatchEvent(new Event('input'));
+  check();
+  $('done').style.display = 'none';
+  $('dots').style.display = 'flex';
+  go(1);
+  toast('Reset done', 'success');
+};
+
+})();
 </script>
 </body>
 </html>
